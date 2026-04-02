@@ -26,6 +26,7 @@
           <button class="admin-menu-item" type="button" data-admin-view="showtimes">Quản lý rạp và suất chiếu</button>
           <button class="admin-menu-item" type="button" data-admin-view="combos">Quản lý combo và đơn đặt</button>
           <button class="admin-menu-item" type="button" data-admin-view="blogs">Quản lý blog</button>
+          <button class="admin-menu-item" type="button" data-admin-view="promotions">Quản lý khuyến mãi</button>
         </aside>
 
         <section class="admin-content">
@@ -145,6 +146,22 @@
                 <button class="btn" type="submit">Thêm blog</button>
               </form>
               <div id="blogList" class="table-wrap"></div>
+            </div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="promotions">
+            <h2 class="panel-title title-22">Quản lý Khuyến mãi</h2>
+            <div class="grid-2">
+              <form id="promotionForm" class="panel-box admin-subpanel">
+                <h3 class="panel-title title-18">Thêm Voucher</h3>
+                <div class="field"><label for="promoCode">Mã code</label><input id="promoCode" name="code" title="Mã ưu đãi (Ví dụ: TET2026)" required /></div>
+                <div class="field"><label for="promoDiscount">Giảm giá (VND)</label><input id="promoDiscount" type="number" name="discountAmount" required /></div>
+                <div class="field"><label for="promoMinOrder">Đơn tối thiểu (VND)</label><input id="promoMinOrder" type="number" name="minOrderValue" value="0" /></div>
+                <div class="field"><label for="promoValidFrom">Từ ngày</label><input id="promoValidFrom" type="datetime-local" name="validFrom" /></div>
+                <div class="field"><label for="promoValidUntil">Đến ngày</label><input id="promoValidUntil" type="datetime-local" name="validUntil" /></div>
+                <button class="btn" type="submit">Thêm Voucher</button>
+              </form>
+              <div id="promotionList" class="table-wrap"></div>
             </div>
           </section>
 

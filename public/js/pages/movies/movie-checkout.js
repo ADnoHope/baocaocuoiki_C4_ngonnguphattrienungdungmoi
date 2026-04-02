@@ -2,6 +2,9 @@ const FLOW_KEY = "bookingFlowV1";
 
 const comboWrap = document.getElementById("comboWrap");
 const paymentMethod = document.getElementById("paymentMethod");
+const voucherCodeInput = document.getElementById("voucherCode");
+const applyVoucherBtn = document.getElementById("applyVoucherBtn");
+const voucherNotice = document.getElementById("voucherNotice");
 const checkoutSummary = document.getElementById("checkoutSummary");
 const checkoutNotice = document.getElementById("checkoutNotice");
 const checkoutBtn = document.getElementById("checkoutBtn");
@@ -14,6 +17,7 @@ let showtimes = [];
 let combos = [];
 let flow = {};
 let lastOrderId = null;
+let currentVoucher = null;
 const COUPLE_SURCHARGE_PER_PAIR = 20000;
 const PREMIUM_SURCHARGE_PER_SEAT = 15000;
 
@@ -174,13 +178,21 @@ function renderSummary() {
     combosTotal += Number(combo?.price || 0) * comboItem.quantity;
   }
 
-  const totalAmount = ticketsTotal + combosTotal;
+  let totalAmount = ticketsTotal + combosTotal;
+  let discountHtml = "";
+  if (currentVoucher && totalAmount >= Number(currentVoucher.minOrderValue)) {
+    const discountValue = Number(currentVoucher.discountAmount);
+    totalAmount = Math.max(0, totalAmount - discountValue);
+    discountHtml = `<div style="color:red">Khuyến mãi (${currentVoucher.code}): -${formatCurrency(discountValue)}</div>`;
+  }
+
   checkoutSummary.innerHTML = `
     <div><strong>Ghế:</strong> ${seats.join(", ") || "Chưa chọn"}</div>
     <div>Giá vé: ${formatCurrency(ticketPrice)} x ${seats.length}</div>
     <div>Phụ thu vị trí đẹp (từ hàng E): ${formatCurrency(premiumSurcharge)} (${premiumSeatCount} ghế)</div>
     <div>Phụ thu ghế cặp đôi: ${formatCurrency(coupleSurcharge)} (${couplePairs} cặp)</div>
     <div>Combo: ${formatCurrency(combosTotal)}</div>
+    ${discountHtml}
     <div class="summary-total"><strong>Tổng cộng: ${formatCurrency(totalAmount)}</strong></div>
   `;
 
@@ -249,6 +261,27 @@ async function initCheckoutPage() {
     paymentMethod.value = flow.paymentMethod || "cash";
     paymentMethod.addEventListener("change", renderSummary);
 
+    if (applyVoucherBtn && voucherCodeInput) {
+      applyVoucherBtn.addEventListener("click", async () => {
+        const code = voucherCodeInput.value.trim();
+        if (!code) return;
+        try {
+          voucherNotice.textContent = "Đang kiểm tra...";
+          voucherNotice.style.color = "#333";
+          const res = await API.get("/api/promotions/check?code=" + encodeURIComponent(code));
+          currentVoucher = res.data;
+          voucherNotice.textContent = "Áp dụng voucher thành công!";
+          voucherNotice.style.color = "green";
+          renderSummary();
+        } catch (error) {
+          currentVoucher = null;
+          voucherNotice.textContent = error.message;
+          voucherNotice.style.color = "red";
+          renderSummary();
+        }
+      });
+    }
+
     checkoutBtn.addEventListener("click", async () => {
       try {
         checkoutBtn.disabled = true;
@@ -258,6 +291,7 @@ async function initCheckoutPage() {
           seats: flow.selectedSeats,
           combos: getSelectedCombos(),
           paymentMethod: paymentMethod.value,
+          voucherCode: currentVoucher ? currentVoucher.code : undefined
         });
 
         lastOrderId = payload.data.orderId;

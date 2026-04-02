@@ -678,6 +678,35 @@ const server = http.createServer(async (req, res) => {
 				return;
 			}
 
+			const promoCodeMatch = pathname.match(/^\/api\/promotions\/check$/);
+			if (promoCodeMatch && req.method === "GET") {
+				const code = requestUrl.searchParams.get("code") || "";
+				if (!code) {
+					sendJson(res, 400, { ok: false, message: "Cần mã khuyến mãi" });
+					return;
+				}
+				const [rows] = await pool.query(
+					"SELECT id, code, discount_amount AS discountAmount, min_order_value AS minOrderValue, valid_from AS validFrom, valid_until AS validUntil FROM promotions WHERE code = ? LIMIT 1",
+					[code]
+				);
+				if (!rows.length) {
+					sendJson(res, 404, { ok: false, message: "Voucher không tồn tại" });
+					return;
+				}
+				const promo = rows[0];
+				const now = new Date();
+				if (promo.validFrom && new Date(promo.validFrom) > now) {
+					sendJson(res, 400, { ok: false, message: "Voucher chưa đến ngày hiệu lực", voucher: promo });
+					return;
+				}
+				if (promo.validUntil && new Date(promo.validUntil) < now) {
+					sendJson(res, 400, { ok: false, message: "Voucher đã hết hạn", voucher: promo });
+					return;
+				}
+				sendJson(res, 200, { ok: true, message: "Voucher hợp lệ", data: promo });
+				return;
+			}
+
 			if (pathname === "/api/combos" && req.method === "GET") {
 				const [rows] = await pool.query("SELECT id, name, description, image_url AS imageUrl, price, created_at AS createdAt FROM combos ORDER BY id DESC");
 				sendJson(res, 200, { ok: true, data: rows });
@@ -802,7 +831,22 @@ const server = http.createServer(async (req, res) => {
 					});
 				}
 
-				const totalAmount = ticketsTotal + combosTotal;
+				let totalAmount = ticketsTotal + combosTotal;
+				let discountValue = 0;
+
+				if (body.voucherCode) {
+					const [voucherRows] = await pool.query("SELECT discount_amount, min_order_value, valid_from, valid_until FROM promotions WHERE code = ? LIMIT 1", [body.voucherCode]);
+					if (voucherRows.length) {
+						const promo = voucherRows[0];
+						const now = new Date();
+						const isValidDate = (!promo.valid_from || new Date(promo.valid_from) <= now) && (!promo.valid_until || new Date(promo.valid_until) >= now);
+						if (isValidDate && totalAmount >= Number(promo.min_order_value)) {
+							discountValue = Number(promo.discount_amount);
+							totalAmount = Math.max(0, totalAmount - discountValue);
+						}
+					}
+				}
+
 				const paymentMethod = body.paymentMethod || "cash";
 
 				const connection = await pool.getConnection();
@@ -1397,6 +1441,29 @@ const server = http.createServer(async (req, res) => {
 					return;
 				}
 				sendJson(res, 200, { ok: true, message: "Xóa blog thành công" });
+				return;
+			}
+
+			if (pathname === "/api/admin/promotions" && req.method === "GET") {
+				if (!authUser || authUser.role !== "admin") return sendJson(res, 403, { ok: false, message: "Cần quyền admin" });
+				const [rows] = await pool.query("SELECT id, code, discount_amount AS discountAmount, min_order_value AS minOrderValue, valid_from AS validFrom, valid_until AS validUntil, created_at AS createdAt FROM promotions ORDER BY id DESC");
+				sendJson(res, 200, { ok: true, data: rows });
+				return;
+			}
+			if (pathname === "/api/admin/promotions" && req.method === "POST") {
+				if (!authUser || authUser.role !== "admin") return sendJson(res, 403, { ok: false, message: "Cần quyền admin" });
+				const body = await readJsonBody(req);
+				if (!body.code || !body.discountAmount) return sendBadRequest(res, "Cần cung cấp mã và số tiền giảm");
+				const [result] = await pool.query("INSERT INTO promotions (code, discount_amount, min_order_value, valid_from, valid_until) VALUES (?, ?, ?, ?, ?)", [body.code, body.discountAmount, body.minOrderValue || 0, body.validFrom || null, body.validUntil || null]);
+				sendJson(res, 201, { ok: true, message: "Tạo voucher thành công", id: result.insertId });
+				return;
+			}
+			const adminPromoId = parseIdFromPath(pathname, "/api/admin/promotions");
+			if (adminPromoId && req.method === "DELETE") {
+				if (!authUser || authUser.role !== "admin") return sendJson(res, 403, { ok: false, message: "Cần quyền admin" });
+				const [result] = await pool.query("DELETE FROM promotions WHERE id = ?", [adminPromoId]);
+				if (!result.affectedRows) return sendJson(res, 404, { ok: false, message: "Không tìm thấy voucher" });
+				sendJson(res, 200, { ok: true, message: "Xóa voucher thành công" });
 				return;
 			}
 

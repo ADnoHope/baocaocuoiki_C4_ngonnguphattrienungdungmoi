@@ -8,12 +8,14 @@ const comboList = document.getElementById("comboList");
 const orderList = document.getElementById("orderList");
 const formatList = document.getElementById("formatList");
 const blogList = document.getElementById("blogList");
+const promotionList = document.getElementById("promotionList");
 const movieForm = document.getElementById("movieForm");
 const theaterForm = document.getElementById("theaterForm");
 const showtimeForm = document.getElementById("showtimeForm");
 const comboForm = document.getElementById("comboForm");
 const formatForm = document.getElementById("formatForm");
 const blogForm = document.getElementById("blogForm");
+const promotionForm = document.getElementById("promotionForm");
 const logoutBtn = document.getElementById("logoutBtn");
 const showtimeMovie = document.getElementById("showtimeMovie");
 const showtimeTheater = document.getElementById("showtimeTheater");
@@ -39,6 +41,7 @@ let combos = [];
 let orders = [];
 let formats = [];
 let blogs = [];
+let promotions = [];
 let activeModalSubmit = null;
 
 function getMovieFormatsByMovieId(movieId) {
@@ -291,7 +294,7 @@ async function loadOverview() {
 }
 
 async function loadData() {
-  const [moviesPayload, theatersPayload, showtimesPayload, combosPayload, ordersPayload, formatsPayload, blogsPayload] = await Promise.all([
+  const [moviesPayload, theatersPayload, showtimesPayload, combosPayload, ordersPayload, formatsPayload, blogsPayload, promotionsPayload] = await Promise.all([
     API.get("/api/movies"),
     API.get("/api/theaters"),
     API.get("/api/showtimes"),
@@ -299,6 +302,7 @@ async function loadData() {
     API.get("/api/admin/orders"),
     API.get("/api/admin/formats"),
     API.get("/api/blogs?includeDraft=1"),
+    API.get("/api/admin/promotions"),
   ]);
 
   movies = moviesPayload.data;
@@ -308,6 +312,7 @@ async function loadData() {
   orders = ordersPayload.data;
   formats = formatsPayload.data;
   blogs = blogsPayload.data;
+  promotions = promotionsPayload?.data || [];
 
   showtimeMovie.innerHTML = movies.map((movie) => `<option value="${movie.id}">${movie.title}</option>`).join("");
   showtimeTheater.innerHTML = theaters.map((theater) => `<option value="${theater.id}">${theater.name}</option>`).join("");
@@ -417,6 +422,21 @@ async function loadData() {
     ])
   );
 
+  if (promotionList) {
+    promotionList.innerHTML = renderTable(
+      ["ID", "Mã thẻ", "Giảm giá", "Đơn tối thiểu", "Từ ngày", "Đến ngày", "Thao tác"],
+      promotions.map((promo) => [
+        promo.id,
+        promo.code,
+        formatCurrency(promo.discountAmount),
+        formatCurrency(promo.minOrderValue),
+        promo.validFrom ? formatDateTime(promo.validFrom) : "-",
+        promo.validUntil ? formatDateTime(promo.validUntil) : "-",
+        `<div class=\"action-row\"><button class=\"btn btn-danger\" data-delete-promo=\"${promo.id}\" type=\"button\">Xóa</button></div>`,
+      ])
+    );
+  }
+
   bindDeleteActions();
   bindEditActions();
 }
@@ -460,6 +480,13 @@ function bindDeleteActions() {
   document.querySelectorAll("[data-delete-blog]").forEach((button) => {
     button.addEventListener("click", async () => {
       await API.delete(`/api/admin/blogs/${button.dataset.deleteBlog}`);
+      await refreshAll();
+    });
+  });
+
+  document.querySelectorAll("[data-delete-promo]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await API.delete(`/api/admin/promotions/${button.dataset.deletePromo}`);
       await refreshAll();
     });
   });
@@ -953,6 +980,20 @@ blogForm?.addEventListener("submit", async (event) => {
   if (blogStatus) {
     blogStatus.value = "published";
   }
+  await refreshAll();
+});
+
+promotionForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(promotionForm).entries());
+  await API.post("/api/admin/promotions", {
+    code: data.code.toUpperCase(),
+    discountAmount: Number(data.discountAmount),
+    minOrderValue: Number(data.minOrderValue || 0),
+    validFrom: data.validFrom ? data.validFrom.replace("T", " ") + ":00" : null,
+    validUntil: data.validUntil ? data.validUntil.replace("T", " ") + ":00" : null,
+  });
+  promotionForm.reset();
   await refreshAll();
 });
 
