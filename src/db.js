@@ -229,6 +229,31 @@ async function initializeDatabase() {
 			)
 		`);
 
+		await pool.query(`
+			CREATE TABLE IF NOT EXISTS reviews (
+				id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+				user_id INT UNSIGNED NOT NULL,
+				movie_id INT UNSIGNED NOT NULL,
+				rating TINYINT UNSIGNED NOT NULL DEFAULT 5,
+				comment TEXT NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+				CONSTRAINT fk_reviews_movie FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+			)
+		`);
+
+		await pool.query(`
+			CREATE TABLE IF NOT EXISTS promotions (
+				id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+				code VARCHAR(50) NOT NULL UNIQUE,
+				discount_amount DECIMAL(10, 2) NOT NULL,
+				min_order_value DECIMAL(10, 2) NOT NULL DEFAULT 0,
+				valid_from DATETIME NULL,
+				valid_until DATETIME NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			)
+		`);
+
 		const adminEmail = process.env.ADMIN_EMAIL || "admin@cinema.vn";
 		const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
 		const adminName = process.env.ADMIN_NAME || "Cinema Admin";
