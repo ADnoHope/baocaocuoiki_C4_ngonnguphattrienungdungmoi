@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết blog - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+    <main class="panel-page">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+          <a href="blog.html" class="active">blog</a>
+        </nav>
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <article class="panel-box mt-12">
+        <a class="btn btn-light" href="blog.html">Quay lại blog</a>
+        <h1 id="blogDetailTitle" class="panel-title mt-12">Đang tải...</h1>
+        <p id="blogDetailDate" class="notice"></p>
+        <div id="blogDetailImage" class="blog-card-media mt-12"></div>
+        <p id="blogDetailSummary" class="blog-card-summary mt-12"></p>
+        <div id="blogDetailContent" class="summary-box mt-12"></div>
+      </article>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/blog/blog-detail.js"></script>
+  </body>
+</html>

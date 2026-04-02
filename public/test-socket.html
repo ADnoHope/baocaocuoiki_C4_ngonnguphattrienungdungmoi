@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Socket Realtime</title>
+    <!-- Trỏ link mượn thư viện socket.io client từ máy chủ -->
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #logs { background: #f4f4f4; padding: 10px; min-height: 200px; font-family: monospace; }
+        .log-item { margin-bottom: 5px; border-bottom: 1px solid #ccc; padding-bottom: 5px;}
+    </style>
+</head>
+<body>
+    <h2>Test Socket Realtime (Webxemphim)</h2>
+    <p>Trạng thái kết nối Server: <strong id="status" style="color:red">Đang chờ...</strong></p>
+    
+    <h3>Lịch sử tín hiệu nhận được:</h3>
+    <div id="logs"></div>
+
+    <script>
+        const socket = io("http://localhost:3000"); // cấu hình port backend
+
+        socket.on("connect", () => {
+            document.getElementById("status").innerText = "Đã kết nối thành công!";
+            document.getElementById("status").style.color = "green";
+            addLog("System: Connected to server via Websocket.");
+        });
+
+        socket.on("disconnect", () => {
+             document.getElementById("status").innerText = "Mất kết nối!";
+             document.getElementById("status").style.color = "red";
+        });
+
+        // Bắt sự kiện mà API Checkout (/api/checkout) sẽ bắn ra
+        socket.on("seats_updated", (data) => {
+            addLog(`TÍN HIỆU TỪ SERVER: Có người vừa đặt vé! <br> ` +
+                   `- Showtime ID: ${data.showtimeId} <br> ` +
+                   `- Ghế vừa bị mua: ${data.seats.join(", ")}`);
+        });
+
+        function addLog(message) {
+            const el = document.getElementById("logs");
+            const d = new Date().toLocaleTimeString();
+            el.innerHTML += `<div class="log-item"><b>[${d}]</b> ${message}</div>`;
+        }
+    </script>
+</body>
+</html>

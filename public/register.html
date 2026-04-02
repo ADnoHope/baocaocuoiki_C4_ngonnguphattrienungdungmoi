@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng ký - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-card auth-card-register">
+        <aside class="auth-visual" aria-hidden="true">
+          <p class="auth-kicker">join cinestream</p>
+          <h1>Tạo tài khoản</h1>
+          <p>Mở khóa trải nghiệm đặt vé thông minh, quản lý lịch sử giao dịch và nhận thông báo suất chiếu sớm.</p>
+          <div class="auth-pills">
+            <span>Ưu đãi thành viên</span>
+            <span>Theo dõi vé</span>
+            <span>Thông báo sớm</span>
+          </div>
+        </aside>
+
+        <section class="auth-form-wrap">
+          <div class="auth-head">
+            <a class="auth-home" href="index.html">Trang chủ</a>
+            <h2>Đăng ký tài khoản mới</h2>
+            <p>Điền thông tin bên dưới để bắt đầu sử dụng dịch vụ.</p>
+          </div>
+
+          <form id="registerForm" class="auth-form">
+            <label for="registerFullName">Họ tên</label>
+            <input id="registerFullName" type="text" name="fullName" title="Họ tên" placeholder="Nguyen Van A" required />
+
+            <label for="registerEmail">Email</label>
+            <input id="registerEmail" type="email" name="email" title="Email" placeholder="you@example.com" required />
+
+            <label for="registerPhone">Số điện thoại</label>
+            <input id="registerPhone" type="text" name="phone" title="Số điện thoại" placeholder="09xxxxxxxx" />
+
+            <label for="registerPassword">Mật khẩu</label>
+            <input id="registerPassword" type="password" name="password" title="Mật khẩu" placeholder="Tối thiểu 6 ký tự" required />
+
+            <button class="auth-submit" type="submit">Tạo tài khoản</button>
+            <p id="registerNotice" class="auth-notice"></p>
+          </form>
+
+          <p class="auth-switch">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+        </section>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/pages/auth/login.js"></script>
+  </body>
+</html>

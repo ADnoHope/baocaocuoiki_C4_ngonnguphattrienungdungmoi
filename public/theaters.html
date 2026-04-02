@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rạp - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="theaters-page-v2">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="home theaters-page theaters-page-shell">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html" class="active">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="theater-hero-v2 reveal">
+        <p class="theater-kicker">Cinema Network</p>
+        <h1>Rạp Đang Hoạt Động</h1>
+        <p class="theater-sub">Chọn rạp phù hợp để xem lịch chiếu và đặt vé nhanh trong vài bước.</p>
+        <div id="theaterStats" class="theater-stats-v2"></div>
+      </section>
+
+      <section class="movie-block reveal theater-panel-v2">
+        <div class="section-head">
+          <h2>danh sách rạp</h2>
+          <a href="showtimes.html">xem lịch tại rạp</a>
+        </div>
+
+        <div class="theater-grid" id="theaterGrid"></div>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+  </body>
+</html>

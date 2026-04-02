@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch Chiếu - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="home showtimes-page">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html" class="active">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="showtimes-wrap reveal">
+        <div class="section-head">
+          <h2>lịch chiếu phim</h2>
+          <a href="movie.html">đi tới trang chọn ghế</a>
+        </div>
+
+        <div class="showtime-guide">
+          <p class="showtime-guide-title">Bước 1</p>
+          <p>Chọn <strong>rạp</strong> hoặc <strong>phim</strong> để bắt đầu. Hệ thống sẽ hiển thị suất chiếu trong ngày bạn chọn.</p>
+        </div>
+
+        <div class="showtime-filters showtime-filters-3">
+          <div class="field-inline field-inline-highlight">
+            <label for="showtimeTheaterFilter">Chọn rạp</label>
+            <select id="showtimeTheaterFilter">
+              <option value="">-- Chưa chọn rạp --</option>
+            </select>
+          </div>
+          <div class="field-inline field-inline-highlight">
+            <label for="showtimeMovieFilter">Hoặc chọn phim</label>
+            <select id="showtimeMovieFilter">
+              <option value="">-- Chưa chọn phim --</option>
+            </select>
+          </div>
+          <div class="field-inline">
+            <label for="showtimeDateFilter">Ngày chiếu</label>
+            <input id="showtimeDateFilter" type="date" />
+          </div>
+        </div>
+
+        <div class="showtime-summary" id="showtimeSummary"></div>
+
+        <div class="showtime-guide showtime-guide-soft">
+          <p class="showtime-guide-title">Bước 2</p>
+          <p>Sau khi chọn xong, danh sách phim và khung giờ trong ngày sẽ hiển thị bên dưới để bạn đặt vé nhanh.</p>
+        </div>
+
+        <div id="showtimeList" class="showtime-stack"></div>
+
+        <template id="showtimeGroupTemplate">
+          <article class="showtime-group-card">
+            <div class="showtime-group-head">
+              <div>
+                <h3 class="showtime-group-title"></h3>
+                <p class="showtime-group-sub"></p>
+              </div>
+            </div>
+
+            <div class="showtime-time-grid"></div>
+
+            <div class="showtime-empty">Không có suất chiếu trong ngày đã chọn.</div>
+          </article>
+        </template>
+
+        <template id="showtimeTimeTemplate">
+          <a class="showtime-time-chip" href="#">
+            <span class="time"></span>
+            <span class="price"></span>
+          </a>
+        </template>
+
+        <div class="showtime-fallback is-hidden" id="showtimeFallback">
+          <p>Vui lòng chọn rạp hoặc phim để xem lịch chiếu chi tiết.</p>
+        </div>
+
+        <div class="showtime-fallback is-hidden" id="showtimeNoData">
+          <p>Không có suất chiếu phù hợp trong ngày đã chọn.</p>
+        </div>
+
+        <div class="showtime-fallback is-hidden" id="showtimeErrorBox">
+          <p id="showtimeErrorText"></p>
+        </div>
+
+        <div class="showtime-note">
+          <a href="movie.html">Bạn có thể vào trang đặt vé để chọn ghế sau khi chọn giờ chiếu.</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/showtimes/showtimes.js"></script>
+  </body>
+</html>

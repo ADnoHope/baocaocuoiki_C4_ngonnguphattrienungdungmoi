@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-card">
+        <aside class="auth-visual" aria-hidden="true">
+          <p class="auth-kicker">cinestream account</p>
+          <h1>Đăng nhập</h1>
+          <p>Tiếp tục hành trình điện ảnh của bạn: lưu vé đã đặt, theo dõi lịch sử và nhận ưu đãi độc quyền.</p>
+          <div class="auth-pills">
+            <span>Nhanh chóng</span>
+            <span>An toàn</span>
+            <span>Bảo mật</span>
+          </div>
+        </aside>
+
+        <section class="auth-form-wrap">
+          <div class="auth-head">
+            <a class="auth-home" href="index.html">Trang chủ</a>
+            <h2>Đăng nhập tài khoản</h2>
+            <p>Nhập email và mật khẩu để truy cập hệ thống đặt vé.</p>
+          </div>
+
+          <form id="loginForm" class="auth-form">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" name="email" title="Email đăng nhập" placeholder="you@example.com" required />
+
+            <label for="loginPassword">Mật khẩu</label>
+            <input id="loginPassword" type="password" name="password" title="Mật khẩu đăng nhập" placeholder="••••••••" required />
+
+            <button class="auth-submit" type="submit">Đăng nhập</button>
+            <p id="loginNotice" class="auth-notice"></p>
+          </form>
+
+          <p class="auth-switch">Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a></p>
+        </section>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/pages/auth/login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bước 3 - Thanh Toán - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="checkout-page">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="panel-box mt-12 booking-stepper">
+        <div class="booking-step is-done">1. Chọn suất</div>
+        <div class="booking-step is-done">2. Chọn ghế</div>
+        <div class="booking-step is-active">3. Thanh toán</div>
+      </section>
+
+      <section class="panel-box mt-12 checkout-shell">
+        <div class="checkout-head">
+          <h2 class="panel-title title-22">Bước 3: Chọn combo và thanh toán</h2>
+          <p class="checkout-head-note">Kiểm tra lại ghế, chọn combo và hoàn tất giao dịch.</p>
+        </div>
+
+        <div id="checkoutShowtimeMeta" class="showtime-meta checkout-meta">Đang tải thông tin đơn...</div>
+
+        <h3 class="panel-title title-18 mt-12">Combo bắp nước</h3>
+        <div id="comboWrap" class="grid-3 checkout-combo-grid"></div>
+
+        <div class="field mt-12 checkout-payment-field">
+          <label for="paymentMethod">Phương thức thanh toán</label>
+          <select id="paymentMethod" title="Phương thức thanh toán">
+            <option value="cash">Tiền mặt tại quầy</option>
+            <option value="momo">MoMo</option>
+            <option value="zalopay">ZaloPay</option>
+            <option value="vnpay">VNPay</option>
+          </select>
+        </div>
+
+        <div id="checkoutSummary" class="summary-box checkout-summary mt-10"></div>
+
+        <div class="action-row mt-10 checkout-actions">
+          <a class="btn btn-light" href="movie-seat.html">Quay lại chọn ghế</a>
+          <button id="checkoutBtn" class="btn" type="button">Tạo đơn đặt vé</button>
+          <button id="confirmPaymentBtn" class="btn btn-light is-hidden" type="button" disabled>Xác nhận thanh toán</button>
+        </div>
+        <p id="checkoutNotice" class="notice"></p>
+      </section>
+
+      <section id="ticketPanel" class="panel-box mt-12 is-hidden">
+        <h2 class="panel-title title-22">Vé điện tử của bạn</h2>
+        <div id="ticketCard"></div>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/movies/movie-checkout.js"></script>
+  </body>
+</html>

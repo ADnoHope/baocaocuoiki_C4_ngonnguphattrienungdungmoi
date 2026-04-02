@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch sử đặt vé - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="history-page">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page history-shell">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="panel-box mt-12 history-hero">
+        <div>
+          <p class="history-kicker">My tickets</p>
+          <h1 class="panel-title">Lịch sử đặt vé</h1>
+          <p class="history-subtitle">Theo dõi toàn bộ vé đã đặt, trạng thái thanh toán và thông tin check-in nhanh.</p>
+        </div>
+        <div class="action-row">
+          <a class="btn btn-light" href="movie.html">Đặt vé mới</a>
+          <a class="btn btn-light" href="showtimes.html">Xem lịch chiếu</a>
+        </div>
+      </section>
+
+      <section class="history-stats mt-12" id="historyStats">
+        <article class="history-stat-card">
+          <p>Tổng đơn</p>
+          <h3 id="statTotalOrders">0</h3>
+        </article>
+        <article class="history-stat-card">
+          <p>Đã thanh toán</p>
+          <h3 id="statPaidOrders">0</h3>
+        </article>
+        <article class="history-stat-card">
+          <p>Tổng chi tiêu</p>
+          <h3 id="statTotalSpent">0 đ</h3>
+        </article>
+      </section>
+
+      <section class="panel-box mt-12 history-list-panel">
+        <h2 class="panel-title title-22">Vé đã đặt</h2>
+        <div id="historyList" class="history-list"></div>
+        <p id="historyNotice" class="notice"></p>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/history/history.js"></script>
+  </body>
+</html>

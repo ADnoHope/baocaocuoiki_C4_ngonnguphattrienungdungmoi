@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineStream - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="home-page">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="home">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+          <a href="#home-blogs">blog</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="hero reveal" aria-label="Banner điện ảnh">
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+          <p class="hero-kicker">endless entertainment</p>
+          <h1>Cinema Online</h1>
+          <p class="hero-sub">Đặt vé online trong 1 luồng: chọn phim, chọn rạp, chọn ghế, combo và thanh toán.</p>
+
+          <div class="hero-actions">
+            <a class="hero-btn primary" href="showtimes.html">Đặt vé ngay</a>
+            <a class="hero-btn ghost" href="#movies-now">Xem phim đang chiếu</a>
+          </div>
+
+          <div class="hero-tags" aria-label="Định dạng phòng chiếu">
+            <span>2D</span>
+            <span>3D</span>
+            <span>IMAX</span>
+            <span>4DX</span>
+          </div>
+        </div>
+
+        <aside class="hero-side" aria-label="Thông tin nhanh">
+          <p class="hero-side-title">ưu đãi hôm nay</p>
+          <h3>Combo bắp + nước giảm 25%</h3>
+          <p>Áp dụng cho suất chiếu sau 18:00 tại rạp liên kết.</p>
+          <a href="promotions.html">Xem chi tiết khuyến mãi</a>
+        </aside>
+      </section>
+
+      <section class="home-highlights reveal" aria-label="Điểm nổi bật">
+        <article>
+          <h3>150K+</h3>
+          <p>vé được đặt online mỗi tháng</p>
+        </article>
+        <article>
+          <h3>40+</h3>
+          <p>cụm rạp trên toàn quốc</p>
+        </article>
+        <article>
+          <h3>4.8/5</h3>
+          <p>đánh giá từ khách hàng thân thiết</p>
+        </article>
+      </section>
+
+      <section class="movie-block reveal" id="movies-now">
+        <div class="section-head">
+          <h2>phim đang chiếu</h2>
+          <a href="movie.html">mua vé ngay</a>
+        </div>
+
+        <div class="movie-grid" id="nowShowingGrid"></div>
+      </section>
+
+      <section class="movie-block reveal" id="movies-coming">
+        <div class="section-head">
+          <h2>phim sắp chiếu</h2>
+        </div>
+
+        <div class="movie-grid" id="comingSoonGrid"></div>
+      </section>
+
+      <section class="movie-block reveal" id="home-blogs">
+        <div class="section-head">
+          <h2>blog điện ảnh</h2>
+          <a href="blog.html">xem tất cả</a>
+        </div>
+        <div class="blog-grid" id="homeBlogGrid"></div>
+      </section>
+
+      <section class="booking reveal" id="promotions">
+        <h3>cinemma booking</h3>
+        <p>hệ thống đặt vé xem phim trực tuyến nhanh chóng, tiện lợi và an toàn.</p>
+      </section>
+
+      <footer class="footer reveal">
+        <section>
+          <h4>Liên kết nhanh</h4>
+          <a href="#">Trang chủ</a>
+          <a href="#">Phim đang chiếu</a>
+          <a href="showtimes.html">Lịch chiếu</a>
+          <a href="promotions.html">Khuyến mãi</a>
+          <a href="login.html">Tài khoản</a>
+        </section>
+
+        <section>
+          <h4>Hỗ trợ</h4>
+          <a href="#">FAQ</a>
+          <a href="#">Hướng dẫn đặt vé</a>
+          <a href="#">Chính sách hoàn vé</a>
+          <a href="#">Điều khoản sử dụng</a>
+          <a href="#">Chính sách bảo mật</a>
+        </section>
+
+        <section>
+          <h4>Liên hệ</h4>
+          <p>Email: support@cinema.vn</p>
+          <p>Hotline: 1900 XXX</p>
+          <p>Giờ làm việc: 08:00 - 22:00</p>
+        </section>
+      </footer>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+  </body>
+</html>

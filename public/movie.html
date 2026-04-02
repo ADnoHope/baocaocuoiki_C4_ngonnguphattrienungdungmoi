@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bước 1 - Chọn Suất Chiếu - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="panel-box mt-12 booking-stepper">
+        <div class="booking-step is-active">1. Chọn suất</div>
+        <div class="booking-step">2. Chọn ghế</div>
+        <div class="booking-step">3. Thanh toán</div>
+      </section>
+
+      <section class="panel-box mt-12">
+        <h2 class="panel-title title-22">Bước 1: Chọn phim, rạp và suất chiếu</h2>
+        <p class="booking-step-note">Chọn suất chiếu trước, sau đó sang trang tiếp theo để chọn ghế.</p>
+
+        <div id="movieDetail" class="summary-box movie-brief mt-10">Đang tải thông tin phim...</div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="movieSelect">Phim</label>
+            <select id="movieSelect" title="Chọn phim"></select>
+          </div>
+          <div class="field">
+            <label for="theaterSelect">Rạp</label>
+            <select id="theaterSelect" title="Chọn rạp"></select>
+          </div>
+        </div>
+        <div class="field mt-10">
+          <label for="showtimeSelect">Suất chiếu</label>
+          <select id="showtimeSelect" title="Chọn suất chiếu"></select>
+        </div>
+        <div id="showtimeMeta" class="showtime-meta">Chọn suất chiếu để hiển thị thông tin chi tiết.</div>
+
+        <div class="action-row mt-12">
+          <a class="btn btn-light" href="showtimes.html">Quay lại lịch chiếu</a>
+          <button id="continueToSeatBtn" class="btn" type="button">Tiếp tục: Chọn ghế</button>
+        </div>
+        <p id="checkoutNotice" class="notice"></p>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/movies/movie.js"></script>
+  </body>
+</html>

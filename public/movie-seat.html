@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bước 2 - Chọn Ghế - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="panel-box mt-12 booking-stepper">
+        <div class="booking-step is-done">1. Chọn suất</div>
+        <div class="booking-step is-active">2. Chọn ghế</div>
+        <div class="booking-step">3. Thanh toán</div>
+      </section>
+
+      <section class="panel-box mt-12">
+        <h2 class="panel-title title-22">Bước 2: Chọn ghế</h2>
+        <div id="seatShowtimeMeta" class="showtime-meta">Đang tải thông tin suất chiếu...</div>
+        <div class="screen-arc mt-12">MÀN HÌNH</div>
+        <div class="entrance-label">lối vào</div>
+        <div id="seatGrid" class="seat-grid cinema-seat-grid"></div>
+        <div class="seat-legend">
+          <span><i class="dot dot-single"></i>Ghế tiêu chuẩn</span>
+          <span><i class="dot dot-premium"></i>Ghế đẹp từ hàng E (+15.000đ/ghế)</span>
+          <span><i class="dot dot-couple"></i>Ghế cặp đôi hàng cuối (+20.000đ/cặp, cộng dồn +15.000đ/ghế)</span>
+          <span><i class="dot dot-taken"></i>Ghế đã bán</span>
+          <span><i class="dot dot-selected"></i>Ghế đang chọn</span>
+        </div>
+
+        <div id="seatSummary" class="summary-box mt-12"></div>
+
+        <div class="action-row mt-12">
+          <a class="btn btn-light" href="movie.html">Quay lại chọn suất</a>
+          <button id="continueToCheckoutBtn" class="btn" type="button">Tiếp tục: Thanh toán</button>
+        </div>
+        <p id="seatNotice" class="notice"></p>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/movies/movie-seat.js"></script>
+  </body>
+</html>

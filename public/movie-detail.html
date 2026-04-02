@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết phim - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="detail-page">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page detail-shell">
+      <header class="topbar reveal">
+        <a class="brand" href="index.html" aria-label="Về trang chủ CineStream">
+          <div class="brand-dot"></div>
+          <span>CineStream</span>
+        </a>
+
+        <nav class="menu" aria-label="Điều hướng chính">
+          <a href="index.html#movies-now">phim</a>
+          <a href="showtimes.html">lịch chiếu</a>
+          <a href="theaters.html">rạp</a>
+          <a href="promotions.html">khuyến mãi</a>
+        </nav>
+
+        <a class="login-btn" href="login.html">Đăng Nhập</a>
+      </header>
+
+      <section class="panel-box mt-12 detail-layout" id="movieDetailWrap">
+        <div class="detail-poster" id="detailPoster" aria-hidden="true"></div>
+        <div>
+          <p class="detail-kicker">Nội dung phim</p>
+          <h1 class="detail-title" id="detailTitle">Đang tải...</h1>
+          <div class="detail-meta" id="detailMeta"></div>
+          <div class="action-row mt-10">
+            <a class="btn" id="bookNowBtn" href="movie.html">Đặt vé ngay</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-box mt-12">
+        <h2 class="panel-title title-22">Giới thiệu phim</h2>
+        <p id="detailDescription" class="detail-description">Đang tải mô tả phim...</p>
+      </section>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/common/ui.js"></script>
+    <script src="js/pages/movies/movie-detail.js"></script>
+  </body>
+</html>

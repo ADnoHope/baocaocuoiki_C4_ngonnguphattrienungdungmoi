@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&family=Oswald:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/ui.css" />
+  </head>
+  <body class="admin-page">
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="panel-page admin-shell">
+      <div class="admin-layout">
+        <aside class="admin-sidebar panel-box" aria-label="Menu quản trị">
+          <p class="admin-menu-label">Menu</p>
+          <button class="admin-menu-item is-active" type="button" data-admin-view="overview">Tổng quan</button>
+          <button class="admin-menu-item" type="button" data-admin-view="movies">Quản lý phim</button>
+          <button class="admin-menu-item" type="button" data-admin-view="formats">Quản lý định dạng phim</button>
+          <button class="admin-menu-item" type="button" data-admin-view="showtimes">Quản lý rạp và suất chiếu</button>
+          <button class="admin-menu-item" type="button" data-admin-view="combos">Quản lý combo và đơn đặt</button>
+          <button class="admin-menu-item" type="button" data-admin-view="blogs">Quản lý blog</button>
+        </aside>
+
+        <section class="admin-content">
+          <section class="panel-box">
+            <h1 class="panel-title">Admin Dashboard</h1>
+            <div id="adminIdentity" class="summary-box">Xin chào...</div>
+            <div class="action-row mt-10">
+              <a class="btn btn-light" href="index.html">Trang chủ</a>
+            </div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view is-active" data-admin-panel="overview">
+            <h2 class="panel-title title-22">Tổng quan</h2>
+            <div id="overview" class="grid-3"></div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="movies">
+            <h2 class="panel-title title-22">Quản lý phim</h2>
+            <form id="movieForm" class="grid-3">
+              <div class="field"><label for="movieTitle">Tiêu đề</label><input id="movieTitle" name="title" title="Tiêu đề phim" required /></div>
+              <div class="field"><label for="movieGenre">Thể loại</label><input id="movieGenre" name="genre" title="Thể loại phim" /></div>
+              <div class="field"><label for="movieDirector">Đạo diễn</label><input id="movieDirector" name="director" title="Đạo diễn" /></div>
+              <div class="field"><label for="movieCastInfo">Diễn viên</label><input id="movieCastInfo" name="castInfo" title="Diễn viên" /></div>
+              <div class="field"><label for="movieLanguage">Ngôn ngữ</label><input id="movieLanguage" name="language" title="Ngôn ngữ" /></div>
+              <div class="field"><label for="movieRated">Rated</label><input id="movieRated" name="rated" title="Độ tuổi" /></div>
+              <div class="field grid-span-all">
+                <label for="movieFormatTrigger">Định dạng phim</label>
+                <div id="movieFormatCombo" class="multi-combobox" data-combobox>
+                  <button id="movieFormatTrigger" class="multi-combobox-trigger" type="button" data-combobox-trigger>Chọn định dạng phim</button>
+                  <div id="movieFormatMenu" class="multi-combobox-menu" data-combobox-menu></div>
+                </div>
+              </div>
+              <div class="field"><label for="movieDurationMinutes">Thời lượng (phút)</label><input id="movieDurationMinutes" type="number" name="durationMinutes" title="Thời lượng phim" /></div>
+              <div class="field"><label for="movieReleaseDate">Ngày khởi chiếu</label><input id="movieReleaseDate" type="date" name="releaseDate" title="Ngày khởi chiếu" /></div>
+              <div class="field"><label for="movieStatus">Trạng thái</label><select id="movieStatus" name="status" title="Trạng thái chiếu"><option value="now_showing">Đang chiếu</option><option value="coming_soon">Sắp chiếu</option></select></div>
+              <div class="field"><label for="moviePosterUrl">Poster URL</label><input id="moviePosterUrl" name="posterUrl" title="Đường dẫn poster" /></div>
+              <div class="field grid-span-all"><label for="movieDescription">Nội dung phim</label><textarea id="movieDescription" name="description" rows="4" title="Nội dung phim"></textarea></div>
+              <div class="action-row grid-span-all"><button class="btn" type="submit">Thêm phim</button></div>
+            </form>
+            <div id="movieList" class="table-wrap mt-10"></div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="formats">
+            <h2 class="panel-title title-22">Quản lý định dạng phim</h2>
+            <form id="formatForm" class="grid-2">
+              <div class="field">
+                <label for="formatName">Tên định dạng</label>
+                <input id="formatName" name="name" title="Tên định dạng" placeholder="IMAX, 3D, 4D, 2D, SVIP" required />
+              </div>
+              <div class="action-row align-end">
+                <button class="btn" type="submit">Thêm định dạng</button>
+              </div>
+            </form>
+            <div id="formatList" class="table-wrap mt-10"></div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="showtimes">
+            <h2 class="panel-title title-22">Quản lý rạp và suất chiếu</h2>
+            <div class="grid-2">
+              <form id="theaterForm" class="panel-box admin-subpanel">
+                <h3 class="panel-title title-18">Thêm rạp</h3>
+                <div class="field"><label for="theaterName">Tên rạp</label><input id="theaterName" name="name" title="Tên rạp" required /></div>
+                <div class="field"><label for="theaterCity">Thành phố</label><input id="theaterCity" name="city" title="Thành phố" /></div>
+                <div class="field"><label for="theaterAddress">Địa chỉ</label><input id="theaterAddress" name="address" title="Địa chỉ" /></div>
+                <button class="btn" type="submit">Thêm rạp</button>
+              </form>
+
+              <form id="showtimeForm" class="panel-box admin-subpanel">
+                <h3 class="panel-title title-18">Thêm suất chiếu</h3>
+                <div class="field"><label for="showtimeMovie">Phim</label><select name="movieId" id="showtimeMovie" title="Chọn phim"></select></div>
+                <div class="field"><label for="showtimeTheater">Rạp</label><select name="theaterId" id="showtimeTheater" title="Chọn rạp"></select></div>
+                <div class="field"><label for="showtimeFormat">Định dạng</label><select name="formatId" id="showtimeFormat" title="Chọn định dạng phim" required></select></div>
+                <div class="field"><label for="showtimeStartTime">Bắt đầu</label><input id="showtimeStartTime" type="datetime-local" name="startTime" title="Thời gian bắt đầu" required /></div>
+                <div class="field"><label for="showtimePrice">Giá vé</label><input id="showtimePrice" type="number" name="price" title="Giá vé" required /></div>
+                <div class="field"><label for="showtimeTotalSeats">Tổng ghế (tự động theo định dạng)</label><input id="showtimeTotalSeats" type="number" name="totalSeats" title="Tổng số ghế" value="120" readonly /></div>
+                <button class="btn" type="submit">Thêm suất</button>
+              </form>
+            </div>
+            <div id="theaterList" class="table-wrap mt-10"></div>
+            <div id="showtimeList" class="table-wrap mt-10"></div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="combos">
+            <h2 class="panel-title title-22">Quản lý combo và đơn đặt</h2>
+            <div class="grid-2">
+              <form id="comboForm" class="panel-box admin-subpanel">
+                <h3 class="panel-title title-18">Thêm combo</h3>
+                <div class="field"><label for="comboName">Tên combo</label><input id="comboName" name="name" title="Tên combo" required /></div>
+                <div class="field"><label for="comboDescription">Mô tả</label><input id="comboDescription" name="description" title="Mô tả combo" /></div>
+                <div class="field"><label for="comboImageUrl">URL hình ảnh</label><input id="comboImageUrl" name="imageUrl" title="URL hình ảnh combo" placeholder="https://..." /></div>
+                <div class="field"><label for="comboPrice">Giá</label><input id="comboPrice" type="number" name="price" title="Giá combo" required /></div>
+                <button class="btn" type="submit">Thêm combo</button>
+              </form>
+              <div id="comboList" class="table-wrap"></div>
+            </div>
+
+            <h3 class="panel-title title-18 mt-14">Đơn đặt vé</h3>
+            <div id="orderList" class="table-wrap"></div>
+          </section>
+
+          <section class="panel-box mt-12 admin-view" data-admin-panel="blogs">
+            <h2 class="panel-title title-22">Quản lý blog</h2>
+            <div class="grid-2">
+              <form id="blogForm" class="panel-box admin-subpanel">
+                <h3 class="panel-title title-18">Thêm blog</h3>
+                <div class="field"><label for="blogTitle">Tiêu đề</label><input id="blogTitle" name="title" title="Tiêu đề blog" required /></div>
+                <div class="field"><label for="blogSummary">Tóm tắt</label><input id="blogSummary" name="summary" title="Tóm tắt blog" maxlength="320" /></div>
+                <div class="field"><label for="blogImageUrl">URL hình ảnh</label><input id="blogImageUrl" name="imageUrl" title="URL hình ảnh blog" placeholder="https://..." /></div>
+                <div class="field">
+                  <label for="blogStatus">Trạng thái</label>
+                  <select id="blogStatus" name="status" title="Trạng thái blog">
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                  </select>
+                </div>
+                <div class="field grid-span-all"><label for="blogContent">Nội dung</label><textarea id="blogContent" name="content" rows="7" title="Nội dung blog" required></textarea></div>
+                <button class="btn" type="submit">Thêm blog</button>
+              </form>
+              <div id="blogList" class="table-wrap"></div>
+            </div>
+          </section>
+
+          <p id="adminNotice" class="notice"></p>
+        </section>
+      </div>
+
+      <div id="adminEditModal" class="admin-modal" aria-hidden="true">
+        <div class="admin-modal-backdrop" data-modal-close="true"></div>
+        <section class="admin-modal-dialog panel-box" role="dialog" aria-modal="true" aria-labelledby="adminEditTitle">
+          <header class="admin-modal-head">
+            <h3 id="adminEditTitle" class="panel-title title-18">Chỉnh sửa</h3>
+            <button id="adminEditClose" class="btn btn-light" type="button">Đóng</button>
+          </header>
+
+          <form id="adminEditForm">
+            <div id="adminEditFields" class="grid-2"></div>
+            <p id="adminEditError" class="notice"></p>
+            <div class="action-row mt-10">
+              <button id="adminEditCancel" class="btn btn-light" type="button">Hủy</button>
+              <button id="adminEditSave" class="btn" type="submit">Lưu thay đổi</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <script src="js/common/client.js"></script>
+    <script src="js/pages/admin/admin.js"></script>
+  </body>
+</html>
