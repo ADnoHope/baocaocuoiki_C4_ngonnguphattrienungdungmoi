@@ -1,4 +1,4 @@
-const { toJsonArray, toNumberArray } = require("./utils");
+const { toJsonArray, toNumberArray } = require("./http");
 
 function normalizeSeatLabel(raw) {
 	return String(raw || "").trim().toUpperCase();
