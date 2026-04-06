@@ -302,7 +302,8 @@ async function initCheckoutPage() {
     paymentMethod.addEventListener("change", renderSummary);
 
     const refreshCheckoutButtonLabel = () => {
-      checkoutBtn.textContent = paymentMethod.value === "vnpay" ? "Tạo đơn & chuyển VNPay" : "Tạo đơn đặt vé";
+      checkoutBtn.textContent = paymentMethod.value === "vnpay" ? "Tạo đơn & chuyển VNPay" : 
+                                paymentMethod.value === "momo" ? "Tạo đơn & chuyển MoMo" : "Tạo đơn đặt vé";
     };
 
     refreshCheckoutButtonLabel();
@@ -350,6 +351,18 @@ async function initCheckoutPage() {
           setTimeout(() => {
             window.location.href = vnpayUrl;
           }, 800);
+          return;
+        }
+        if (paymentMethod.value === "momo") {
+          checkoutNotice.textContent = `Đã tạo đơn #${lastOrderId}. Đang chuyển sang cổng thanh toán MoMo...`;
+          confirmPaymentBtn.classList.add("is-hidden");
+          if (payload.payUrl) {
+            setTimeout(() => {
+              window.location.href = payload.payUrl;
+            }, 800);
+          } else {
+            checkoutNotice.textContent = `Lỗi: Không tìm thấy link thanh toán, hãy thử lại!`;
+          }
           return;
         }
 

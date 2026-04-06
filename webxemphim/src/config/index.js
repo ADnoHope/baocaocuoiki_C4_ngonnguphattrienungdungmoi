@@ -20,4 +20,12 @@ module.exports = {
 		password: process.env.DB_PASSWORD || "",
 		database: process.env.DB_NAME || "webxemphim",
 	},
+	momo: {
+		apiUrl: process.env.MOMO_API_URL || "https://test-payment.momo.vn/v2/gateway/api/create",
+		secretKey: process.env.MOMO_SECRET_KEY || "K951B6PE1waDMi640xX08PD3vg6EkVlz",
+		accessKey: process.env.MOMO_ACCESS_KEY || "F8BBA842ECF85",
+		partnerCode: process.env.MOMO_PARTNER_CODE || "MOMO",
+		returnUrl: process.env.MOMO_RETURN_URL || "http://localhost:3000/api/checkout/momo_return",
+		notifyUrl: process.env.MOMO_NOTIFY_URL || "http://localhost:3000/api/checkout/momo_notify",
+	}
 };
