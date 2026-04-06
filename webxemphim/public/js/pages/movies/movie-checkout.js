@@ -21,6 +21,34 @@ let currentVoucher = null;
 const COUPLE_SURCHARGE_PER_PAIR = 20000;
 const PREMIUM_SURCHARGE_PER_SEAT = 15000;
 
+function getCheckoutQueryParams() {
+  return new URLSearchParams(window.location.search);
+}
+
+function isVnpayReturnSuccess() {
+  const params = getCheckoutQueryParams();
+  return params.get("vnpay") === "success" && Number(params.get("orderId") || 0) > 0;
+}
+
+function getVnpayReturnUrl(orderId) {
+  return `${window.location.origin}/movie-checkout.html?vnpay=success&orderId=${encodeURIComponent(orderId)}`;
+}
+
+function getVnpayDemoUrl(orderId, showtime, totalAmount) {
+  const seats = Array.isArray(flow.selectedSeats) ? flow.selectedSeats.join(", ") : "";
+  return `/vnpay.html?orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(totalAmount)}&movieTitle=${encodeURIComponent(showtime?.movieTitle || "")}&theaterName=${encodeURIComponent(showtime?.theaterName || "")}&seats=${encodeURIComponent(seats)}&returnUrl=${encodeURIComponent(getVnpayReturnUrl(orderId))}`;
+}
+
+async function renderVnpaySuccess(orderId) {
+  checkoutNotice.textContent = `Thanh toán VNPay thành công. Mã đơn: ${orderId}`;
+  checkoutBtn.disabled = true;
+  checkoutBtn.textContent = "Đã thanh toán";
+  confirmPaymentBtn.disabled = true;
+  confirmPaymentBtn.classList.add("is-hidden");
+  await loadTicketByOrderId(orderId);
+  localStorage.removeItem(FLOW_KEY);
+}
+
 function readFlow() {
   try {
     return JSON.parse(localStorage.getItem(FLOW_KEY) || "{}");
@@ -218,8 +246,20 @@ function renderShowtimeMeta() {
 
 async function initCheckoutPage() {
   flow = readFlow();
+  const checkoutParams = getCheckoutQueryParams();
+  const vnpaySuccessOrderId = Number(checkoutParams.get("orderId") || 0);
+  const isVnpaySuccess = isVnpayReturnSuccess() && vnpaySuccessOrderId > 0;
   confirmPaymentBtn.classList.add("is-hidden");
   confirmPaymentBtn.disabled = true;
+
+  if (isVnpaySuccess) {
+    try {
+      await renderVnpaySuccess(vnpaySuccessOrderId);
+      return;
+    } catch (error) {
+      checkoutNotice.textContent = error.message;
+    }
+  }
 
   if (!flow.showtimeId || !Array.isArray(flow.selectedSeats) || !flow.selectedSeats.length) {
     checkoutNotice.textContent = "Bạn chưa hoàn tất bước chọn suất/ghế. Vui lòng quay lại bước trước.";
@@ -261,6 +301,13 @@ async function initCheckoutPage() {
     paymentMethod.value = flow.paymentMethod || "cash";
     paymentMethod.addEventListener("change", renderSummary);
 
+    const refreshCheckoutButtonLabel = () => {
+      checkoutBtn.textContent = paymentMethod.value === "vnpay" ? "Tạo đơn & chuyển VNPay" : "Tạo đơn đặt vé";
+    };
+
+    refreshCheckoutButtonLabel();
+    paymentMethod.addEventListener("change", refreshCheckoutButtonLabel);
+
     if (applyVoucherBtn && voucherCodeInput) {
       applyVoucherBtn.addEventListener("click", async () => {
         const code = voucherCodeInput.value.trim();
@@ -295,6 +342,17 @@ async function initCheckoutPage() {
         });
 
         lastOrderId = payload.data.orderId;
+        if (paymentMethod.value === "vnpay") {
+          checkoutNotice.textContent = `Đã tạo đơn #${lastOrderId}. Đang chuyển sang cổng thanh toán VNPay...`;
+          confirmPaymentBtn.classList.add("is-hidden");
+          const showtime = showtimes.find((item) => item.id === Number(flow.showtimeId));
+          const vnpayUrl = getVnpayDemoUrl(lastOrderId, showtime, payload.data.totalAmount);
+          setTimeout(() => {
+            window.location.href = vnpayUrl;
+          }, 800);
+          return;
+        }
+
         checkoutNotice.textContent = `Tạo đơn thành công. Mã đơn: ${lastOrderId}`;
         confirmPaymentBtn.disabled = false;
         confirmPaymentBtn.classList.remove("is-hidden");
