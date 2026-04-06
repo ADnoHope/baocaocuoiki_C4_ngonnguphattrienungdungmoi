@@ -83,7 +83,21 @@ async function getShowtimes(req, res, { pool, requestUrl }) {
 	const movieFilter = requestUrl.searchParams.get("movieId");
 	const theaterFilter = requestUrl.searchParams.get("theaterId");
 	const params = [];
-	let sql = `SELECT s.*, m.title AS movieTitle, t.name AS theaterName, f.name AS formatName FROM showtimes s JOIN movies m ON m.id = s.movie_id JOIN theaters t ON t.id = s.theater_id LEFT JOIN movie_formats f ON f.id = s.format_id`;
+	let sql = `SELECT
+		s.id,
+		s.movie_id AS movieId,
+		s.theater_id AS theaterId,
+		s.format_id AS formatId,
+		s.start_time AS startTime,
+		s.price,
+		s.total_seats AS totalSeats,
+		m.title AS movieTitle,
+		t.name AS theaterName,
+		f.name AS formatName
+	FROM showtimes s
+	JOIN movies m ON m.id = s.movie_id
+	JOIN theaters t ON t.id = s.theater_id
+	LEFT JOIN movie_formats f ON f.id = s.format_id`;
 	const cond = [];
 	if (movieFilter) { cond.push("s.movie_id = ?"); params.push(movieFilter); }
 	if (theaterFilter) { cond.push("s.theater_id = ?"); params.push(theaterFilter); }

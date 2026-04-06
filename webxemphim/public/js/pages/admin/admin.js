@@ -100,11 +100,14 @@ function getMovieFormatsByMovieId(movieId) {
 }
 
 function defaultSeatsByFormatName(formatName) {
-  const normalized = String(formatName || "").toUpperCase();
+  const normalized = String(formatName || "")
+    .toUpperCase()
+    .replace(/[\s_-]+/g, "");
   if (normalized === "IMAX") return 240;
   if (normalized === "SVIP") return 64;
   if (normalized === "3D") return 140;
   if (normalized === "4D") return 100;
+  if (normalized === "SLEEPBOX") return 30;
   return 120;
 }
 

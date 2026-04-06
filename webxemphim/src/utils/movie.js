@@ -4,6 +4,13 @@ function normalizeSeatLabel(raw) {
 	return String(raw || "").trim().toUpperCase();
 }
 
+function normalizeFormatName(raw) {
+	return String(raw || "")
+		.trim()
+		.toUpperCase()
+		.replace(/[\s_-]+/g, "");
+}
+
 function build2DSeatMap() {
 	const seats = [];
 	for (let rowCode = 65; rowCode <= 75; rowCode += 1) {
@@ -34,23 +41,94 @@ function buildIMAXSeatMap() {
 	return seats;
 }
 
+function rangeAscending(max) {
+	const result = [];
+	for (let col = 1; col <= max; col += 1) result.push(col);
+	return result;
+}
+
+function rangeDescending(max) {
+	const result = [];
+	for (let col = max; col >= 1; col -= 1) result.push(col);
+	return result;
+}
+
+function rangeCenterOut(max) {
+	const result = [];
+	let left = Math.floor((max + 1) / 2);
+	let right = left + 1;
+	result.push(left);
+	while (left > 1 || right <= max) {
+		if (right <= max) result.push(right);
+		left -= 1;
+		if (left >= 1) result.push(left);
+		right += 1;
+	}
+	return result;
+}
+
+function buildSeatMapByPattern(totalSeats, seatsPerRow, columnOrderFactory) {
+	const seats = [];
+	let generated = 0;
+	const total = Math.max(0, Number(totalSeats) || 0);
+	const perRow = Math.max(1, Number(seatsPerRow) || 1);
+	const rowCount = Math.ceil(total / perRow);
+
+	for (let rowIndex = 0; rowIndex < rowCount; rowIndex += 1) {
+		const rowCode = String.fromCharCode(65 + rowIndex);
+		const remaining = total - generated;
+		const maxCol = Math.min(perRow, remaining);
+		const colOrder = columnOrderFactory(maxCol, rowIndex);
+		for (const col of colOrder) {
+			if (generated >= total) break;
+			seats.push(`${rowCode}${col}`);
+			generated += 1;
+		}
+	}
+
+	return seats;
+}
+
 function getSeatLayoutPreset(formatName) {
-	const normalized = String(formatName || "").trim().toUpperCase();
+	const normalized = normalizeFormatName(formatName);
 	if (normalized === "IMAX") return { totalSeats: 497, seatsPerRow: 37 };
 	if (normalized === "SVIP") return { totalSeats: 64, seatsPerRow: 8 };
 	if (normalized === "3D") return { totalSeats: 140, seatsPerRow: 10 };
 	if (normalized === "4D") return { totalSeats: 100, seatsPerRow: 10 };
+	if (normalized === "SLEEPBOX") return { totalSeats: 30, seatsPerRow: 10 };
 	return { totalSeats: 166, seatsPerRow: 14 };
 }
 
 function buildSeatMap(formatName, fallbackTotalSeats = 0) {
-	const normalized = String(formatName || "").trim().toUpperCase();
+	const normalized = normalizeFormatName(formatName);
 	if (normalized === "IMAX") return buildIMAXSeatMap();
 	if (!normalized || normalized === "2D") return build2DSeatMap();
 
 	const preset = getSeatLayoutPreset(formatName);
-	const totalSeats = Number(fallbackTotalSeats) > 0 ? Number(fallbackTotalSeats) : preset.totalSeats;
+	const totalSeats = normalized === "SLEEPBOX"
+		? preset.totalSeats
+		: Number(fallbackTotalSeats) > 0
+			? Number(fallbackTotalSeats)
+			: preset.totalSeats;
 	const seatsPerRow = preset.seatsPerRow;
+
+	if (normalized === "3D") {
+		return buildSeatMapByPattern(totalSeats, seatsPerRow, (maxCol, rowIndex) =>
+			rowIndex % 2 === 0 ? rangeAscending(maxCol) : rangeDescending(maxCol)
+		);
+	}
+
+	if (normalized === "SVIP") {
+		return buildSeatMapByPattern(totalSeats, seatsPerRow, (maxCol) => rangeDescending(maxCol));
+	}
+
+	if (normalized === "4D") {
+		return buildSeatMapByPattern(totalSeats, seatsPerRow, (maxCol) => rangeCenterOut(maxCol));
+	}
+
+	if (normalized === "SLEEPBOX") {
+		return buildSeatMapByPattern(totalSeats, seatsPerRow, (maxCol) => rangeAscending(maxCol));
+	}
 
 	const seats = [];
 	for (let i = 0; i < totalSeats; i += 1) {
@@ -62,12 +140,16 @@ function buildSeatMap(formatName, fallbackTotalSeats = 0) {
 }
 
 function getLastRowCode(formatName, fallbackTotalSeats = 0) {
-	const normalized = String(formatName || "").trim().toUpperCase();
+	const normalized = normalizeFormatName(formatName);
 	if (normalized === "IMAX") return "P";
 	if (!normalized || normalized === "2D") return "L";
 
 	const preset = getSeatLayoutPreset(formatName);
-	const totalSeats = Number(fallbackTotalSeats) > 0 ? Number(fallbackTotalSeats) : preset.totalSeats;
+	const totalSeats = normalized === "SLEEPBOX"
+		? preset.totalSeats
+		: Number(fallbackTotalSeats) > 0
+			? Number(fallbackTotalSeats)
+			: preset.totalSeats;
 	const rows = Math.ceil(totalSeats / preset.seatsPerRow);
 	return String.fromCharCode(65 + Math.max(0, rows - 1));
 }

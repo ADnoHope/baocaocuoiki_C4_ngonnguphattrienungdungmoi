@@ -304,6 +304,11 @@
   color: #201305;
 }
 
+.cinema-seat-grid .seat-sleepbox {
+  background: linear-gradient(130deg, #263148, #45577e);
+  color: #f3f7ff;
+}
+
 .cinema-seat-grid .seat.taken {
   background: #d0d0d0;
   color: #2f2f34;
@@ -368,6 +373,37 @@
 
 .cinema-seat-grid.format-svip {
   grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.cinema-seat-grid.sleepbox-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.cinema-seat-grid.sleepbox-layout .sleepbox-seat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cinema-seat-grid.sleepbox-layout .sleepbox-seat-pair {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline: 6px;
+}
+
+.cinema-seat-grid.sleepbox-layout .sleepbox-aisle {
+  width: 32px;
+  min-width: 32px;
+  height: 56px;
+}
+
+.cinema-seat-grid.sleepbox-layout .seat {
+  min-width: 54px;
 }
 
 .seat-legend {

@@ -17,6 +17,14 @@ function currentFormatName() {
   return String(showtime?.formatName || "2D").toUpperCase();
 }
 
+function currentFormatKey() {
+  return currentFormatName().replace(/[\s_-]+/g, "");
+}
+
+function isSleepboxFormat() {
+  return currentFormatKey() === "SLEEPBOX";
+}
+
 function parseSeatLabel(label) {
   const match = /^([A-Z])(\d+)$/i.exec(String(label || "").trim());
   if (!match) {
@@ -40,8 +48,16 @@ function getLastRowCode() {
 
 function isCoupleSeatLabel(label) {
   const parsed = parseSeatLabel(label);
+  if (!parsed) {
+    return false;
+  }
+
+  if (isSleepboxFormat()) {
+    return true;
+  }
+
   const lastRow = getLastRowCode();
-  return Boolean(parsed && lastRow && parsed.row === lastRow);
+  return Boolean(lastRow && parsed.row === lastRow);
 }
 
 function isPremiumSeatLabel(label) {
@@ -64,6 +80,23 @@ function getPairSeatLabel(label) {
 }
 
 function calculateCouplePairCount() {
+
+  if (isSleepboxFormat()) {
+    const pairKeys = new Set();
+    selectedSeats.forEach((label) => {
+      const parsed = parseSeatLabel(label);
+      if (!parsed) {
+        return;
+      }
+
+      const pairBase = parsed.col % 2 === 0 ? parsed.col - 1 : parsed.col;
+      if (selectedSeats.has(`${parsed.row}${pairBase}`) && selectedSeats.has(`${parsed.row}${pairBase + 1}`)) {
+        pairKeys.add(`${parsed.row}-${pairBase}`);
+      }
+    });
+    return pairKeys.size;
+  }
+
   const lastRow = getLastRowCode();
   if (!lastRow) {
     return 0;
@@ -129,28 +162,33 @@ function seatClassByFormat(label) {
   }
 
   const formatName = currentFormatName();
+  const formatKey = currentFormatKey();
   const rowCode = String(label || "").charAt(0);
 
-  if (formatName === "IMAX") {
+  if (formatKey === "IMAX") {
     if (["R", "S", "T"].includes(rowCode)) {
       return "seat-imax-premium";
     }
     return "seat-imax-standard";
   }
 
-  if (formatName === "SVIP") {
+  if (formatKey === "SVIP") {
     if (["F", "G", "H"].includes(rowCode)) {
       return "seat-svip-lux";
     }
     return "seat-svip-standard";
   }
 
-  if (formatName === "4D") {
+  if (formatKey === "4D") {
     return "seat-4d";
   }
 
-  if (formatName === "3D") {
+  if (formatKey === "3D") {
     return "seat-3d";
+  }
+
+  if (formatKey === "SLEEPBOX") {
+    return "seat-sleepbox";
   }
 
   return "seat-single";
@@ -200,8 +238,10 @@ function renderSeatSummary() {
 
 function renderSeatGrid() {
   const formatName = currentFormatName();
-  const isIMAX = formatName === "IMAX";
-  seatGrid.className = `seat-grid cinema-seat-grid format-${formatName.toLowerCase()} ${isIMAX ? "imax-layout" : ""}`;
+  const formatKey = currentFormatKey();
+  const isIMAX = formatKey === "IMAX";
+  const isSleepbox = formatKey === "SLEEPBOX";
+  seatGrid.className = `seat-grid cinema-seat-grid format-${formatName.toLowerCase()} ${isIMAX ? "imax-layout" : ""} ${isSleepbox ? "sleepbox-layout" : ""}`;
 
   const renderSeatButton = (seat) => {
     const selected = selectedSeats.has(seat.label);
@@ -242,6 +282,38 @@ function renderSeatGrid() {
             <div class=\"imax-seat-block\">${leftSeats.map((seat) => renderSeatButton(seat)).join("")}</div>
             <div class=\"imax-seat-block\">${centerSeats.map((seat) => renderSeatButton(seat)).join("")}</div>
             <div class=\"imax-seat-block\">${rightSeats.map((seat) => renderSeatButton(seat)).join("")}</div>
+          </div>
+        `;
+      })
+      .join("");
+  } else if (isSleepbox) {
+    const rowMap = new Map();
+    seatState.forEach((seat) => {
+      const parsed = parseSeatLabel(seat.label);
+      if (!parsed) {
+        return;
+      }
+      if (!rowMap.has(parsed.row)) {
+        rowMap.set(parsed.row, []);
+      }
+      rowMap.get(parsed.row).push({ ...seat, col: parsed.col });
+    });
+
+    const orderedRows = Array.from(rowMap.keys()).sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0));
+    seatGrid.innerHTML = orderedRows
+      .map((row) => {
+        const rowSeats = rowMap.get(row).sort((a, b) => a.col - b.col);
+        const pairBlocks = [];
+        for (let i = 0; i < rowSeats.length; i += 2) {
+          const pairSeats = rowSeats.slice(i, i + 2);
+          pairBlocks.push(`<div class="sleepbox-seat-pair">${pairSeats.map((seat) => renderSeatButton(seat)).join("")}</div>`);
+        }
+
+        return `
+          <div class="sleepbox-seat-row">
+            <div class="sleepbox-aisle" aria-hidden="true"></div>
+            ${pairBlocks.join("")}
+            <div class="sleepbox-aisle" aria-hidden="true"></div>
           </div>
         `;
       })
