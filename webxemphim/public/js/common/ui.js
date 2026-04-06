@@ -107,10 +107,10 @@ async function renderTopbarUser() {
 }
 
 async function loadMovies() {
-  const nowGrid = document.getElementById("nowShowingGrid");
-  const comingGrid = document.getElementById("comingSoonGrid");
+  const nowCarousel = document.getElementById("nowShowingCarousel");
+  const comingCarousel = document.getElementById("comingSoonCarousel");
 
-  if (!nowGrid || !comingGrid) {
+  if (!nowCarousel || !comingCarousel) {
     return;
   }
 
@@ -118,12 +118,43 @@ async function loadMovies() {
     const nowData = await API.get("/api/movies?status=now_showing");
     const comingData = await API.get("/api/movies?status=coming_soon");
 
-    renderMovieCards(nowGrid, nowData.data, "poster-a");
-    renderMovieCards(comingGrid, comingData.data, "poster-g");
+    renderMovieCards(nowCarousel, nowData.data, "poster-a");
+    renderMovieCards(comingCarousel, comingData.data, "poster-g");
+
+    // Initialize carousels
+    initCarousel("nowShowingCarousel");
+    initCarousel("comingSoonCarousel");
   } catch (error) {
-    nowGrid.innerHTML = `<p class=\"empty-note\">Không tải dữ liệu phim: ${error.message}</p>`;
-    comingGrid.innerHTML = "";
+    nowCarousel.innerHTML = `<p class=\"empty-note\">Không tải dữ liệu phim: ${error.message}</p>`;
+    comingCarousel.innerHTML = "";
   }
+}
+
+function initCarousel(carouselId) {
+  const container = document.getElementById(carouselId);
+  if (!container) return;
+
+  const carousel = container.closest('.movie-carousel');
+  if (!carousel) return;
+
+  const prevBtn = carousel.querySelector('.carousel-btn.prev');
+  const nextBtn = carousel.querySelector('.carousel-btn.next');
+
+  if (!prevBtn || !nextBtn) return;
+
+  let scrollAmount = 0;
+  const cardWidth = 192; // 180px + 12px gap
+
+  prevBtn.addEventListener('click', () => {
+    scrollAmount = Math.max(0, scrollAmount - cardWidth * 3);
+    container.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    scrollAmount = Math.min(maxScroll, scrollAmount + cardWidth * 3);
+    container.scrollTo({ left: scrollAmount, behavior: 'smooth' });
+  });
 }
 
 async function loadTheaters() {
