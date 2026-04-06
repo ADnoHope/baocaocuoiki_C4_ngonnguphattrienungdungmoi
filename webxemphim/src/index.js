@@ -16,6 +16,7 @@ const adminRoutes = require("./routes/admin");
 const blogRoutes = require("./routes/blogs");
 const comboRoutes = require("./routes/combos");
 const promoRoutes = require("./routes/promotions");
+const vnpayDir = path.join(__dirname, "..", "custom", "VNPay");
 
 if (!fs.existsSync(config.paths.uploadDir)) {
 	fs.mkdirSync(config.paths.uploadDir, { recursive: true });
@@ -65,6 +66,20 @@ const htmlPathMap = {
 	"/test-socket.html": "/htmlcustom/QuanTriHeThong/test-socket.html",
 };
 
+function serveCustomVnpayFile(res, fileName) {
+	const filePath = path.join(vnpayDir, fileName);
+	fs.readFile(filePath, (err, data) => {
+		if (err) return (res.writeHead(404), res.end());
+		const mime = {
+			".html": "text/html",
+			".js": "text/javascript",
+			".css": "text/css",
+		}[path.extname(filePath).toLowerCase()] || "application/octet-stream";
+		res.writeHead(200, { "Content-Type": mime });
+		res.end(data);
+	});
+}
+
 let io;
 const server = http.createServer(async (req, res) => {
 	const requestUrl = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
@@ -94,6 +109,9 @@ const server = http.createServer(async (req, res) => {
 	}
 
 	// Static
+	if (pathname === "/vnpay.html") return serveCustomVnpayFile(res, "index.html");
+	if (pathname === "/vnpay.js") return serveCustomVnpayFile(res, "vnpay.js");
+
 	const requestedPath = pathname === "/" ? "/index.html" : pathname;
 	const mappedPath = htmlPathMap[requestedPath] || requestedPath;
 	const safePath = path.normalize(mappedPath).replace(/^([.][.][/\\])+/, "");

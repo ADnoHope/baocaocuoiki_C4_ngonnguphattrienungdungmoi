@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VNPay Demo - CineStream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700;800&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/ui.css" />
+    <style>
+      body.vnpay-demo {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Be Vietnam Pro", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(0, 182, 164, 0.18), transparent 28%),
+          linear-gradient(180deg, #f5f8ff 0%, #edf2ff 100%);
+        color: #152036;
+      }
+      .vnpay-shell {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 20px 48px;
+      }
+      .vnpay-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .vnpay-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: "Oswald", sans-serif;
+        font-size: 28px;
+        letter-spacing: 0.02em;
+        font-weight: 700;
+      }
+      .vnpay-badge {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: #e9f5ff;
+        color: #0f4c81;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .vnpay-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+      }
+      .vnpay-card {
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(21, 32, 54, 0.08);
+        border-radius: 24px;
+        box-shadow: 0 24px 60px rgba(21, 32, 54, 0.12);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+      }
+      .vnpay-card-main {
+        padding: 24px;
+      }
+      .vnpay-card-side {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .vnpay-form {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .vnpay-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .vnpay-form .field {
+        margin: 0;
+      }
+      .vnpay-form select,
+      .vnpay-form input {
+        width: 100%;
+        border: 1px solid rgba(21, 32, 54, 0.18);
+        border-radius: 14px;
+        padding: 13px 14px;
+        background: #fff;
+        font: inherit;
+        color: #152036;
+      }
+      .vnpay-form label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 700;
+        color: #2d3a53;
+      }
+      .vnpay-card-preview {
+        border-radius: 22px;
+        background: linear-gradient(135deg, #10233f, #1e5fa8 55%, #0ea5e9);
+        color: white;
+        padding: 18px;
+        min-height: 190px;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+      }
+      .vnpay-card-chip {
+        width: 50px;
+        height: 34px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #f7d37a, #f2b44e);
+        margin-bottom: 26px;
+      }
+      .vnpay-card-number {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.18em;
+        font-weight: 800;
+      }
+      .vnpay-card-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 18px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .vnpay-test-cards {
+        display: grid;
+        gap: 10px;
+      }
+      .vnpay-test-card {
+        border-radius: 14px;
+        background: #f7f9ff;
+        border: 1px solid rgba(21, 32, 54, 0.1);
+        padding: 12px 14px;
+        line-height: 1.7;
+        font-size: 14px;
+      }
+      .vnpay-title {
+        margin: 0 0 8px;
+        font-family: "Oswald", sans-serif;
+        font-size: 34px;
+        text-transform: uppercase;
+      }
+      .vnpay-subtitle {
+        margin: 0 0 18px;
+        color: #5b6577;
+        line-height: 1.6;
+      }
+      .vnpay-order-box,
+      .vnpay-info-box {
+        border-radius: 18px;
+        border: 1px solid rgba(21, 32, 54, 0.12);
+        background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(244,248,255,0.94));
+        padding: 18px;
+      }
+      .vnpay-info-list {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+      }
+      .vnpay-info-list div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed rgba(21, 32, 54, 0.1);
+      }
+      .vnpay-info-list div:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+      .vnpay-label {
+        color: #5b6577;
+      }
+      .vnpay-value {
+        font-weight: 700;
+        color: #152036;
+        text-align: right;
+      }
+      .vnpay-qr {
+        width: 240px;
+        height: 240px;
+        object-fit: contain;
+        border-radius: 18px;
+        background: white;
+        padding: 12px;
+        margin: 0 auto;
+        display: block;
+      }
+      .vnpay-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .vnpay-button {
+        border: 0;
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+      .vnpay-button:hover {
+        transform: translateY(-1px);
+      }
+      .vnpay-button.primary {
+        background: linear-gradient(135deg, #1c7ed6, #0ea5e9);
+        color: white;
+      }
+      .vnpay-button.secondary {
+        background: #eaf1ff;
+        color: #16314f;
+      }
+      .vnpay-note {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: #fff7d8;
+        color: #8a5b00;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .vnpay-status {
+        margin-top: 16px;
+        font-weight: 700;
+      }
+      .is-loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      @media (max-width: 920px) {
+        .vnpay-grid { grid-template-columns: 1fr; }
+        .vnpay-topbar { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body class="vnpay-demo">
+    <main class="vnpay-shell">
+      <header class="vnpay-topbar">
+        <div class="vnpay-brand">
+          <span>VNPay Demo</span>
+          <span class="vnpay-badge">Sandbox</span>
+        </div>
+        <a class="login-btn" href="/movie-checkout.html">Quay lại checkout</a>
+      </header>
+
+      <section class="vnpay-grid">
+        <article class="vnpay-card vnpay-card-main">
+          <p class="vnpay-badge">Thông tin tích hợp từ email Sandbox VNPay</p>
+          <h1 class="vnpay-title">Thanh toán đơn đặt vé</h1>
+          <p class="vnpay-subtitle">
+            Đây là trang mô phỏng cổng thanh toán VNPay. Bạn có thể kiểm tra thông tin đơn hàng,
+            nhập thẻ test và hệ thống sẽ quay về trang checkout với trạng thái thành công.
+          </p>
+
+          <div class="vnpay-order-box" id="orderBox">Đang tải thông tin đơn hàng...</div>
+          <form id="vnpayForm" class="vnpay-form" autocomplete="off">
+            <div class="vnpay-form-grid">
+              <div class="field">
+                <label for="bankCode">Ngân hàng</label>
+                <select id="bankCode" required>
+                  <option value="NCB">NCB</option>
+                  <option value="BIDV">BIDV</option>
+                  <option value="VCB">Vietcombank</option>
+                  <option value="TCB">Techcombank</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cardNumber">Số thẻ</label>
+                <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" pattern="[0-9\s]{16,19}" placeholder="9704198526191432198" required />
+              </div>
+            </div>
+
+            <div class="vnpay-form-grid">
+              <div class="field">
+                <label for="cardHolder">Tên chủ thẻ</label>
+                <input id="cardHolder" type="text" placeholder="NGUYEN VAN A" required />
+              </div>
+              <div class="field">
+                <label for="cardExpiry">Ngày phát hành</label>
+                <input id="cardExpiry" type="text" placeholder="07/15" required />
+              </div>
+            </div>
+
+            <div class="vnpay-form-grid">
+              <div class="field">
+                <label for="otpCode">Mật khẩu OTP</label>
+                <input id="otpCode" type="password" inputmode="numeric" placeholder="123456" required />
+              </div>
+              <div class="field">
+                <label for="confirmAmount">Số tiền thanh toán</label>
+                <input id="confirmAmount" type="text" readonly />
+              </div>
+            </div>
+
+            <div class="vnpay-actions">
+              <button id="paySuccessBtn" class="vnpay-button primary" type="submit">Thanh toán</button>
+              <button id="cancelBtn" class="vnpay-button secondary" type="button">Hủy giao dịch</button>
+            </div>
+          </form>
+          <div class="vnpay-actions mt-12">
+          </div>
+          <div id="paymentStatus" class="vnpay-status"></div>
+          <div class="vnpay-note">
+            <strong>Lưu ý:</strong> đây là luồng demo, không gọi thật tới sandbox VNPay.
+            Thông tin merchant được hiển thị để mô phỏng quy trình tích hợp.
+          </div>
+        </article>
+
+        <aside class="vnpay-card vnpay-card-side">
+          <div class="vnpay-info-box">
+            <h2 class="panel-title title-18">Thông tin merchant</h2>
+            <div class="vnpay-info-list">
+              <div><span class="vnpay-label">Terminal ID</span><span class="vnpay-value">TIR1FU0R</span></div>
+              <div><span class="vnpay-label">Môi trường</span><span class="vnpay-value">Sandbox</span></div>
+              <div><span class="vnpay-label">URL thanh toán</span><span class="vnpay-value">sandbox.vnpayment.vn</span></div>
+              <div><span class="vnpay-label">Cổng kiểm tra</span><span class="vnpay-value">VNPay-QR Demo</span></div>
+            </div>
+          </div>
+
+          <div class="vnpay-info-box">
+            <h2 class="panel-title title-18">Mã QR demo</h2>
+            <img id="demoQr" class="vnpay-qr" alt="QR thanh toán VNPay demo" />
+          </div>
+
+          <div class="vnpay-info-box">
+            <h2 class="panel-title title-18">Thẻ test</h2>
+            <div class="vnpay-test-cards">
+              <div class="vnpay-test-card">
+                <strong>NCB</strong><br />
+                Số thẻ: 9704198526191432198<br />
+                Chủ thẻ: NGUYEN VAN A<br />
+                Ngày phát hành: 07/15<br />
+                OTP: 123456
+              </div>
+              <div class="vnpay-test-card">
+                <strong>NCB</strong><br />
+                Số thẻ: 9704195798459170488<br />
+                Chủ thẻ: NGUYEN VAN A<br />
+                Ngày phát hành: 07/15<br />
+                OTP: 123456
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/js/common/client.js"></script>
+    <script src="/js/common/ui.js"></script>
+    <script src="/vnpay.js"></script>
+  </body>
+</html>
