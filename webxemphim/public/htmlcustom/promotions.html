@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Voucher Khuyến Mãi</title>
+	<link rel="stylesheet" href="../css/styles.css">
+	<link rel="stylesheet" href="../css/ui.css">
+	<style>
+		.promotions-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		.promotions-header {
+			text-align: center;
+			margin-bottom: 40px;
+		}
+
+		.promotions-header h1 {
+			font-size: 32px;
+			color: #1a1a1a;
+			margin-bottom: 10px;
+		}
+
+		.promotions-header p {
+			color: #666;
+			font-size: 16px;
+		}
+
+		.promotions-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+			gap: 20px;
+			margin-top: 30px;
+		}
+
+		.voucher-card {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border-radius: 12px;
+			padding: 25px;
+			color: white;
+			position: relative;
+			overflow: hidden;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.voucher-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+		}
+
+		.voucher-card.active {
+			background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+		}
+
+		.voucher-card.success {
+			background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+		}
+
+		.voucher-card.warning {
+			background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+		}
+
+		.voucher-card::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			right: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+			background-size: 20px 20px;
+			animation: float 20s linear infinite;
+		}
+
+		@keyframes float {
+			0% {
+				transform: translate(0, 0);
+			}
+			100% {
+				transform: translate(50px, 50px);
+			}
+		}
+
+		.voucher-content {
+			position: relative;
+			z-index: 1;
+		}
+
+		.voucher-code {
+			font-size: 24px;
+			font-weight: bold;
+			letter-spacing: 2px;
+			margin-bottom: 10px;
+			text-transform: uppercase;
+			background: rgba(255, 255, 255, 0.2);
+			padding: 10px 15px;
+			border-radius: 8px;
+			display: inline-block;
+		}
+
+		.voucher-discount {
+			font-size: 28px;
+			font-weight: bold;
+			margin: 15px 0 10px;
+		}
+
+		.voucher-description {
+			font-size: 14px;
+			line-height: 1.6;
+			opacity: 0.95;
+			margin-bottom: 15px;
+		}
+
+		.voucher-conditions {
+			font-size: 12px;
+			opacity: 0.85;
+			margin-bottom: 15px;
+			padding-top: 15px;
+			border-top: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.voucher-condition {
+			margin: 5px 0;
+			display: flex;
+			align-items: center;
+		}
+
+		.voucher-condition::before {
+			content: '✓';
+			display: inline-block;
+			width: 20px;
+			margin-right: 8px;
+		}
+
+		.voucher-footer {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 15px;
+			padding-top: 15px;
+			border-top: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.voucher-expiry {
+			font-size: 12px;
+			opacity: 0.85;
+		}
+
+		.voucher-expiry.expired {
+			color: #ff0000;
+			font-weight: bold;
+		}
+
+		.copy-btn {
+			background: rgba(255, 255, 255, 0.2);
+			border: 2px solid white;
+			color: white;
+			padding: 8px 16px;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: bold;
+			transition: all 0.3s ease;
+		}
+
+		.copy-btn:hover {
+			background: white;
+			color: #667eea;
+		}
+
+		.copy-btn.copied {
+			background: #4ade80;
+			border-color: #4ade80;
+		}
+
+		.empty-state {
+			text-align: center;
+			padding: 60px 20px;
+		}
+
+		.empty-state-icon {
+			font-size: 64px;
+			margin-bottom: 20px;
+		}
+
+		.empty-state h2 {
+			font-size: 24px;
+			color: #1a1a1a;
+			margin-bottom: 10px;
+		}
+
+		.empty-state p {
+			color: #666;
+			font-size: 16px;
+		}
+
+		.loading {
+			text-align: center;
+			padding: 40px;
+			font-size: 16px;
+			color: #666;
+		}
+
+		.loading::after {
+			content: '';
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			margin-left: 10px;
+			border: 3px solid #f3f3f3;
+			border-top: 3px solid #667eea;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		.filter-tabs {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 30px;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+
+		.filter-tab {
+			padding: 10px 20px;
+			border: 2px solid #ddd;
+			background: white;
+			color: #666;
+			border-radius: 25px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			font-weight: 500;
+		}
+
+		.filter-tab:hover,
+		.filter-tab.active {
+			background: #667eea;
+			color: white;
+			border-color: #667eea;
+		}
+
+		@media (max-width: 768px) {
+			.promotions-header h1 {
+				font-size: 24px;
+			}
+
+			.promotions-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.voucher-footer {
+				flex-direction: column;
+				gap: 10px;
+				align-items: flex-start;
+			}
+
+			.copy-btn {
+				width: 100%;
+				text-align: center;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="promotions-container">
+		<div class="promotions-header">
+			<h1>🎉 Voucher Khuyến Mãi</h1>
+			<p>Tìm voucher tốt nhất cho đơn hàng của bạn</p>
+		</div>
+
+		<div class="filter-tabs">
+			<button class="filter-tab active" data-filter="all">Tất Cả</button>
+			<button class="filter-tab" data-filter="discount">Giảm Giá</button>
+			<button class="filter-tab" data-filter="expiring">Sắp Hết Hạn</button>
+		</div>
+
+		<div id="promotions-list" class="promotions-grid">
+			<div class="loading">Đang tải voucher...</div>
+		</div>
+
+		<div id="empty-state" class="empty-state" style="display: none;">
+			<div class="empty-state-icon">😕</div>
+			<h2>Không có voucher nào</h2>
+			<p>Hiện tại không có voucher khả dụng. Hãy quay lại sau!</p>
+		</div>
+	</div>
+
+	<script>
+		let allVouchers = [];
+
+		async function loadVouchers() {
+			try {
+				const response = await fetch('/api/promotions');
+				const result = await response.json();
+
+				if (result.ok && Array.isArray(result.data)) {
+					allVouchers = result.data;
+					displayVouchers('all');
+				} else {
+					showEmptyState();
+				}
+			} catch (error) {
+				console.error('Lỗi khi tải voucher:', error);
+				showEmptyState();
+			}
+		}
+
+		function displayVouchers(filter = 'all') {
+			const list = document.getElementById('promotions-list');
+			const emptyState = document.getElementById('empty-state');
+
+			let filtered = allVouchers;
+
+			if (filter === 'discount') {
+				filtered = allVouchers.filter(v => v.discountAmount >= 50000);
+			} else if (filter === 'expiring') {
+				const now = new Date();
+				filtered = allVouchers.filter(v => {
+					if (!v.daysRemaining) return false;
+					return v.daysRemaining <= 7 && v.daysRemaining > 0;
+				});
+			}
+
+			if (filtered.length === 0) {
+				list.style.display = 'none';
+				emptyState.style.display = 'block';
+				return;
+			}
+
+			list.style.display = 'grid';
+			emptyState.style.display = 'none';
+
+			list.innerHTML = filtered.map(voucher => {
+				const discountText = voucher.discountAmount >= 1000000
+					? `${(voucher.discountAmount / 1000000).toFixed(0)}M`
+					: `${(voucher.discountAmount / 1000).toFixed(0)}K`;
+
+				const minText = voucher.minOrderValue > 0
+					? `Đơn tối thiểu: ${formatCurrency(voucher.minOrderValue)}`
+					: 'Không có điều kiện';
+
+				const expiryText = voucher.daysRemaining
+					? (voucher.daysRemaining === 1 ? 'Hết hạn trong 1 ngày' : `Còn ${voucher.daysRemaining} ngày`)
+					: 'Không có hạn';
+
+				const isExpiring = voucher.daysRemaining && voucher.daysRemaining <= 3;
+				const cardClass = isExpiring ? 'warning' : 'success';
+
+				return `
+					<div class="voucher-card ${cardClass}">
+						<div class="voucher-content">
+							<div class="voucher-code">${voucher.code}</div>
+							<div class="voucher-discount">- ${discountText}</div>
+							<div class="voucher-description">${minText}</div>
+							<div class="voucher-conditions">
+								<div class="voucher-condition">Mã này giúp bạn tiết kiệm được một khoản tiền lớn</div>
+							</div>
+							<div class="voucher-footer">
+								<div class="voucher-expiry ${isExpiring ? 'expired' : ''}">${expiryText}</div>
+								<button class="copy-btn" onclick="copyCode('${voucher.code}')">Sao Chép</button>
+							</div>
+						</div>
+					</div>
+				`;
+			}).join('');
+		}
+
+		function formatCurrency(value) {
+			return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+		}
+
+		function copyCode(code) {
+			navigator.clipboard.writeText(code).then(() => {
+				const btn = event.target;
+				const originalText = btn.textContent;
+				btn.textContent = '✓ Đã Sao Chép';
+				btn.classList.add('copied');
+
+				setTimeout(() => {
+					btn.textContent = originalText;
+					btn.classList.remove('copied');
+				}, 2000);
+			}).catch(err => {
+				console.error('Lỗi sao chép:', err);
+				alert('Lỗi sao chép mã');
+			});
+		}
+
+		function showEmptyState() {
+			const list = document.getElementById('promotions-list');
+			const emptyState = document.getElementById('empty-state');
+			list.style.display = 'none';
+			emptyState.style.display = 'block';
+		}
+
+		// Filter tabs
+		document.querySelectorAll('.filter-tab').forEach(tab => {
+			tab.addEventListener('click', () => {
+				document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+				tab.classList.add('active');
+				displayVouchers(tab.dataset.filter);
+			});
+		});
+
+		// Load vouchers on page load
+		loadVouchers();
+	</script>
+</body>
+</html>
