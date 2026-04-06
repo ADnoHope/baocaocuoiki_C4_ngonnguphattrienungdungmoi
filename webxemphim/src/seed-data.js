@@ -12,15 +12,34 @@ const movieFormats = ["IMAX", "3D", "4D", "2D", "SVIP"];
 
 const movies = [
   { title: "Primate", description: "Phim hành động giật gân.", genre: "Action", director: "James Carter", castInfo: "Liam Stone, Mia Harper", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 125, releaseDate: "2026-03-10", status: "now_showing", formats: ["2D", "IMAX"] },
-  { title: "Silent Hill: New Dawn", description: "Kinh dị tâm lý với thị trấn sương mù.", genre: "Horror", director: "Ava Collins", castInfo: "Noah Price, Emma Reid", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T18", duration: 113, releaseDate: "2026-04-20", status: "coming_soon", formats: ["2D", "4D"] },
   { title: "Tom & Jerry Forever", description: "Hoạt hình vui nhộn cho gia đình.", genre: "Animation", director: "Anthony Lee", castInfo: "Tom, Jerry", language: "Lồng tiếng Việt", rated: "P", duration: 98, releaseDate: "2026-03-18", status: "now_showing", formats: ["2D", "3D"] },
-  { title: "Avatar: Reborn", description: "Phiêu lưu khoa học viễn tưởng quy mô lớn.", genre: "Sci-Fi", director: "James Cameron", castInfo: "Giovanni Ribisi, Kate Winslet, Zoe Saldana", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 142, releaseDate: "2026-05-10", status: "coming_soon", formats: ["3D", "IMAX", "SVIP"] },
   { title: "The Housemaid Returns", description: "Tâm lý kinh dị với tình tiết bất ngờ.", genre: "Thriller", director: "Lê Thanh Sơn", castInfo: "Lan Ngọc, Quốc Trường", language: "Tiếng Việt", rated: "T16", duration: 110, releaseDate: "2026-04-05", status: "now_showing", formats: ["2D", "SVIP"] },
   { title: "Grand Prix Legends", description: "Đua xe tốc độ cao và kịch tính.", genre: "Sport", director: "Martin Shaw", castInfo: "Chris Miles, Daniel Park", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 105, releaseDate: "2026-03-22", status: "now_showing", formats: ["2D", "4D"] },
-  { title: "Suzume Winds", description: "Anime phiêu lưu tình cảm đầy cảm xúc.", genre: "Anime", director: "Makoto Shinkai", castInfo: "Nanoka Hara, Hokuto Matsumura", language: "Tiếng Nhật - Phụ đề Tiếng Việt", rated: "K", duration: 121, releaseDate: "2026-04-12", status: "coming_soon", formats: ["2D", "3D"] },
   { title: "Dino Family 2", description: "Hoạt hình gia đình đáng yêu.", genre: "Animation", director: "Henry Woods", castInfo: "Dino Kids Cast", language: "Lồng tiếng Việt", rated: "P", duration: 96, releaseDate: "2026-03-30", status: "now_showing", formats: ["2D"] },
   { title: "Boong Bắp Siêu Hời", description: "Hài hước học đường nhẹ nhàng.", genre: "Comedy", director: "Nguyễn Quang Dũng", castInfo: "Thu Trang, Tiến Luật", language: "Tiếng Việt", rated: "K", duration: 102, releaseDate: "2026-04-01", status: "now_showing", formats: ["2D", "SVIP"] },
-  { title: "Last Night in Saigon", description: "Tội phạm điều tra hồi hộp.", genre: "Crime", director: "Victor Tran", castInfo: "Lê Bình, Trần Nam", language: "Tiếng Việt", rated: "T16", duration: 118, releaseDate: "2026-05-01", status: "coming_soon", formats: ["2D", "IMAX"] },
+  { title: "The Last Emperor", description: "Lịch sử Trung Hoa đầy bi kịch.", genre: "Drama", director: "Bernardo Bertolucci", castInfo: "John Lone, Joan Chen", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 163, releaseDate: "2026-03-15", status: "now_showing", formats: ["2D", "IMAX"] },
+  { title: "Jurassic World Dominion", description: "Khủng long quay trở lại.", genre: "Action", director: "Colin Trevorrow", castInfo: "Chris Pratt, Bryce Dallas Howard", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 147, releaseDate: "2026-03-20", status: "now_showing", formats: ["3D", "IMAX"] },
+  { title: "Spider-Man: No Way Home", description: "Người nhện đa vũ trụ.", genre: "Action", director: "Jon Watts", castInfo: "Tom Holland, Zendaya", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 148, releaseDate: "2026-03-25", status: "now_showing", formats: ["2D", "3D", "IMAX"] },
+  { title: "The Batman", description: "Siêu anh hùng bóng đêm.", genre: "Action", director: "Matt Reeves", castInfo: "Robert Pattinson, Zoë Kravitz", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T18", duration: 176, releaseDate: "2026-03-28", status: "now_showing", formats: ["2D", "IMAX"] },
+  { title: "Doctor Strange in the Multiverse of Madness", description: "Phù thủy tối thượng.", genre: "Fantasy", director: "Sam Raimi", castInfo: "Benedict Cumberbatch, Elizabeth Olsen", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 126, releaseDate: "2026-04-02", status: "now_showing", formats: ["2D", "3D"] },
+  { title: "Top Gun: Maverick", description: "Phi công siêu đẳng.", genre: "Action", director: "Joseph Kosinski", castInfo: "Tom Cruise, Miles Teller", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 130, releaseDate: "2026-04-03", status: "now_showing", formats: ["2D", "IMAX"] },
+  { title: "Black Panther: Wakanda Forever", description: "Vương quốc Wakanda.", genre: "Action", director: "Ryan Coogler", castInfo: "Letitia Wright, Lupita Nyong'o", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 161, releaseDate: "2026-04-04", status: "now_showing", formats: ["2D", "3D", "IMAX"] },
+  { title: "Avatar: The Way of Water", description: "Hành tinh Pandora.", genre: "Sci-Fi", director: "James Cameron", castInfo: "Sam Worthington, Zoe Saldana", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 192, releaseDate: "2026-04-05", status: "now_showing", formats: ["3D", "IMAX"] },
+  { title: "Oppenheimer", description: "Bom nguyên tử.", genre: "Drama", director: "Christopher Nolan", castInfo: "Cillian Murphy, Emily Blunt", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T18", duration: 180, releaseDate: "2026-04-06", status: "now_showing", formats: ["2D", "IMAX"] },
+  { title: "Barbie", description: "Búp bê Barbie.", genre: "Comedy", director: "Greta Gerwig", castInfo: "Margot Robbie, Ryan Gosling", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 114, releaseDate: "2026-04-07", status: "now_showing", formats: ["2D", "3D"] },
+  { title: "Dune: Part Two", description: "Sa mạc Arrakis.", genre: "Sci-Fi", director: "Denis Villeneuve", castInfo: "Timothée Chalamet, Zendaya", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 166, releaseDate: "2026-04-08", status: "now_showing", formats: ["2D", "3D", "IMAX"] },
+  { title: "Guardians of the Galaxy Vol. 3", description: "Vệ binh dải Ngân hà.", genre: "Action", director: "James Gunn", castInfo: "Chris Pratt, Zoe Saldana", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 150, releaseDate: "2026-04-09", status: "now_showing", formats: ["2D", "3D", "IMAX"] },
+  { title: "The Super Mario Bros. Movie", description: "Game Mario.", genre: "Animation", director: "Aaron Horvath", castInfo: "Chris Pratt, Anya Taylor-Joy", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "P", duration: 92, releaseDate: "2026-04-10", status: "now_showing", formats: ["2D", "3D"] },
+  { title: "John Wick: Chapter 4", description: "Sát thủ huyền thoại.", genre: "Action", director: "Chad Stahelski", castInfo: "Keanu Reeves, Laurence Fishburne", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T18", duration: 169, releaseDate: "2026-04-11", status: "now_showing", formats: ["2D", "IMAX"] },
+  { title: "Guardians of the Galaxy Vol. 4", description: "Hành trình mới của nhóm vệ binh.", genre: "Action", director: "James Gunn", castInfo: "Chris Pratt, Pom Klementieff", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 145, releaseDate: "2026-04-18", status: "coming_soon", formats: ["2D", "3D", "IMAX"] },
+  { title: "Mission: Impossible – Dead Reckoning Part Two", description: "Ethan Hunt đối đầu thử thách mới.", genre: "Action", director: "Christopher McQuarrie", castInfo: "Tom Cruise, Hayley Atwell", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 150, releaseDate: "2026-04-16", status: "coming_soon", formats: ["2D", "IMAX"] },
+  { title: "Wonka", description: "Chuyến phiêu lưu kỳ ảo của chú Willy Wonka.", genre: "Fantasy", director: "Paul King", castInfo: "Timothée Chalamet, Olivia Colman", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "P", duration: 115, releaseDate: "2026-04-17", status: "coming_soon", formats: ["2D"] },
+  { title: "Fast X", description: "Tốc độ và gia đình trên đường đua.", genre: "Action", director: "Louis Leterrier", castInfo: "Vin Diesel, Michelle Rodriguez", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T16", duration: 140, releaseDate: "2026-04-20", status: "coming_soon", formats: ["2D", "4D"] },
+  { title: "The Marvels", description: "Ba siêu anh hùng hợp lực bảo vệ vũ trụ.", genre: "Action", director: "Nia DaCosta", castInfo: "Brie Larson, Iman Vellani", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 135, releaseDate: "2026-04-22", status: "coming_soon", formats: ["2D", "3D"] },
+  { title: "Spider-Verse 2", description: "Lần đầu tiên các Spider-Person gặp nhau.", genre: "Animation", director: "Joaquim Dos Santos", castInfo: "Shameik Moore, Hailee Steinfeld", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "P", duration: 120, releaseDate: "2026-04-24", status: "coming_soon", formats: ["2D", "3D"] },
+  { title: "Transformers: Rise of the Beasts", description: "Cuộc chiến máy móc mới khởi động.", genre: "Sci-Fi", director: "Steven Caple Jr.", castInfo: "Anthony Ramos, Dominique Fishback", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 130, releaseDate: "2026-04-25", status: "coming_soon", formats: ["2D", "IMAX"] },
+  { title: "Indiana Jones and the Dial of Destiny", description: "Hành trình cuối cùng của Indiana Jones.", genre: "Adventure", director: "James Mangold", castInfo: "Harrison Ford, Phoebe Waller-Bridge", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T13", duration: 125, releaseDate: "2026-04-28", status: "coming_soon", formats: ["2D", "IMAX"] },
+  { title: "Napoleon", description: "Bi kịch và tham vọng của vị hoàng đế vĩ đại.", genre: "Historical", director: "Ridley Scott", castInfo: "Joaquin Phoenix, Vanessa Kirby", language: "Tiếng Anh - Phụ đề Tiếng Việt", rated: "T16", duration: 155, releaseDate: "2026-04-30", status: "coming_soon", formats: ["2D", "IMAX"] },
 ];
 
 const combos = [
@@ -57,14 +76,6 @@ const blogs = [
     imageUrl: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80",
     status: "published",
   },
-];
-
-const showtimes = [
-  { movieIndex: 0, theaterIndex: 0, format: "IMAX", startTime: "2026-04-02 18:30:00", price: 95000, totalSeats: 60 },
-  { movieIndex: 2, theaterIndex: 1, format: "3D", startTime: "2026-04-02 20:45:00", price: 90000, totalSeats: 60 },
-  { movieIndex: 4, theaterIndex: 2, format: "SVIP", startTime: "2026-04-03 19:00:00", price: 105000, totalSeats: 70 },
-  { movieIndex: 5, theaterIndex: 3, format: "4D", startTime: "2026-04-03 21:15:00", price: 99000, totalSeats: 60 },
-  { movieIndex: 8, theaterIndex: 4, format: "2D", startTime: "2026-04-04 17:45:00", price: 89000, totalSeats: 55 },
 ];
 
 async function seed() {
@@ -141,18 +152,34 @@ async function seed() {
     ]);
   }
 
-  for (const showtime of showtimes) {
-    await pool.query(
-      "INSERT INTO showtimes (movie_id, theater_id, format_id, start_time, price, total_seats) VALUES (?, ?, ?, ?, ?, ?)",
-      [
-        movieIds[showtime.movieIndex],
-        theaterIds[showtime.theaterIndex],
-        formatIdsByName[showtime.format] || formatIdsByName["2D"],
-        showtime.startTime,
-        showtime.price,
-        showtime.totalSeats,
-      ]
-    );
+  // Generate showtimes for all now_showing movies in all theaters from 2026-04-06 to 2026-04-10
+  const times = ["10:00:00", "12:30:00", "15:00:00", "17:30:00", "20:00:00"];
+  const prices = { "2D": 85000, "3D": 95000, "IMAX": 120000, "4D": 110000, "SVIP": 150000 };
+
+  for (let day = 6; day <= 10; day++) {
+    const date = `2026-04-${day.toString().padStart(2, '0')}`;
+    for (let movieIndex = 0; movieIndex < movieIds.length; movieIndex++) {
+      const movie = movies[movieIndex];
+      if (movie.status !== "now_showing") continue;
+      for (let theaterIndex = 0; theaterIndex < theaterIds.length; theaterIndex++) {
+        for (const time of times) {
+          const format = movie.formats[Math.floor(Math.random() * movie.formats.length)] || "2D";
+          const price = prices[format] || 85000;
+          const totalSeats = format === "SVIP" ? 50 : format === "IMAX" ? 80 : 60;
+          await pool.query(
+            "INSERT INTO showtimes (movie_id, theater_id, format_id, start_time, price, total_seats) VALUES (?, ?, ?, ?, ?, ?)",
+            [
+              movieIds[movieIndex],
+              theaterIds[theaterIndex],
+              formatIdsByName[format] || formatIdsByName["2D"],
+              `${date} ${time}`,
+              price,
+              totalSeats,
+            ]
+          );
+        }
+      }
+    }
   }
 
   const [[movieCount]] = await pool.query("SELECT COUNT(*) AS total FROM movies");
