@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Socket Realtime</title>
+    <link rel="stylesheet" href="css/test-socket.css">
     <!-- Trỏ link mượn thư viện socket.io client từ máy chủ -->
     <script src="/socket.io/socket.io.js"></script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; }
-        #logs { background: #f4f4f4; padding: 10px; min-height: 200px; font-family: monospace; }
-        .log-item { margin-bottom: 5px; border-bottom: 1px solid #ccc; padding-bottom: 5px;}
-    </style>
 </head>
 <body>
     <h2>Test Socket Realtime (Webxemphim)</h2>
-    <p>Trạng thái kết nối Server: <strong id="status" style="color:red">Đang chờ...</strong></p>
+    <p>Trạng thái kết nối Server: <strong id="status">Đang chờ...</strong></p>
     
     <h3>Lịch sử tín hiệu nhận được:</h3>
     <div id="logs"></div>

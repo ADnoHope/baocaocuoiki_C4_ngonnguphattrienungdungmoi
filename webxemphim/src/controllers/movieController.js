@@ -3,7 +3,24 @@ const { attachFormatsToMovies, buildSeatMap, getLastRowCode, isPremiumViewSeatLa
 
 async function getAllMovies(req, res, { pool, requestUrl }) {
 	const status = requestUrl.searchParams.get("status");
-	const sql = status ? "SELECT * FROM movies WHERE status = ? ORDER BY id DESC" : "SELECT * FROM movies ORDER BY id DESC";
+	const movieSelectFields = `
+		id,
+		title,
+		description,
+		genre,
+		director,
+		cast_info AS castInfo,
+		language,
+		rated,
+		duration_minutes AS durationMinutes,
+		release_date AS releaseDate,
+		status,
+		poster_url AS posterUrl,
+		created_at AS createdAt
+	`;
+	const sql = status
+		? `SELECT ${movieSelectFields} FROM movies WHERE status = ? ORDER BY id DESC`
+		: `SELECT ${movieSelectFields} FROM movies ORDER BY id DESC`;
 	const [rows] = await pool.query(sql, status ? [status] : []);
 	await attachFormatsToMovies(pool, rows);
 	sendJson(res, 200, { ok: true, data: rows });
@@ -11,9 +28,43 @@ async function getAllMovies(req, res, { pool, requestUrl }) {
 
 async function getMovieById(req, res, { pool, pathname }) {
 	const movieId = parseIdFromPath(pathname, "/api/movies");
-	const [rows] = await pool.query("SELECT * FROM movies WHERE id = ? LIMIT 1", [movieId]);
+	const [rows] = await pool.query(
+		`SELECT
+			id,
+			title,
+			description,
+			genre,
+			director,
+			cast_info AS castInfo,
+			language,
+			rated,
+			duration_minutes AS durationMinutes,
+			release_date AS releaseDate,
+			status,
+			poster_url AS posterUrl,
+			created_at AS createdAt
+		 FROM movies WHERE id = ? LIMIT 1`,
+		[movieId]
+	);
 	if (!rows.length) return sendJson(res, 404, { ok: false, message: "Không tìm thấy phim" });
-	const [showtimes] = await pool.query(`SELECT s.*, f.name AS formatName, t.name AS theaterName FROM showtimes s JOIN theaters t ON t.id = s.theater_id LEFT JOIN movie_formats f ON f.id = s.format_id WHERE s.movie_id = ? ORDER BY s.start_time ASC`, [movieId]);
+	const [showtimes] = await pool.query(
+		`SELECT
+			s.id,
+			s.movie_id AS movieId,
+			s.theater_id AS theaterId,
+			s.format_id AS formatId,
+			s.start_time AS startTime,
+			s.price,
+			s.total_seats AS totalSeats,
+			f.name AS formatName,
+			t.name AS theaterName
+		 FROM showtimes s
+		 JOIN theaters t ON t.id = s.theater_id
+		 LEFT JOIN movie_formats f ON f.id = s.format_id
+		 WHERE s.movie_id = ?
+		 ORDER BY s.start_time ASC`,
+		[movieId]
+	);
 	await attachFormatsToMovies(pool, rows);
 	sendJson(res, 200, { ok: true, data: { ...rows[0], showtimes } });
 }

@@ -17,6 +17,15 @@ const formatForm = document.getElementById("formatForm");
 const blogForm = document.getElementById("blogForm");
 const promotionForm = document.getElementById("promotionForm");
 const logoutBtn = document.getElementById("logoutBtn");
+const moviePosterUrlInput = document.getElementById("moviePosterUrl");
+const moviePosterFileInput = document.getElementById("moviePosterFile");
+const moviePosterUploadBtn = document.getElementById("moviePosterUploadBtn");
+const comboImageUrlInput = document.getElementById("comboImageUrl");
+const comboImageFileInput = document.getElementById("comboImageFile");
+const comboImageUploadBtn = document.getElementById("comboImageUploadBtn");
+const blogImageUrlInput = document.getElementById("blogImageUrl");
+const blogImageFileInput = document.getElementById("blogImageFile");
+const blogImageUploadBtn = document.getElementById("blogImageUploadBtn");
 const showtimeMovie = document.getElementById("showtimeMovie");
 const showtimeTheater = document.getElementById("showtimeTheater");
 const showtimeFormat = document.getElementById("showtimeFormat");
@@ -43,6 +52,42 @@ let formats = [];
 let blogs = [];
 let promotions = [];
 let activeModalSubmit = null;
+
+async function uploadImageFile(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  const payload = await API.postForm("/api/admin/upload", formData);
+  if (!payload?.url) {
+    throw new Error("Upload thành công nhưng không nhận được URL file");
+  }
+  return payload.url;
+}
+
+function bindImageUploadButton(button, fileInput, urlInput, label) {
+  if (!button || !fileInput || !urlInput) {
+    return;
+  }
+
+  button.addEventListener("click", async () => {
+    const file = fileInput.files?.[0];
+    if (!file) {
+      adminNotice.textContent = `Vui lòng chọn ảnh ${label} trước khi tải lên`;
+      return;
+    }
+
+    try {
+      button.disabled = true;
+      adminNotice.textContent = `Đang tải ảnh ${label}...`;
+      const url = await uploadImageFile(file);
+      urlInput.value = url;
+      adminNotice.textContent = `Tải ảnh ${label} thành công`;
+    } catch (error) {
+      adminNotice.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
 
 function getMovieFormatsByMovieId(movieId) {
   const movie = movies.find((item) => Number(item.id) === Number(movieId));
@@ -195,6 +240,16 @@ function buildModalFields(fields, values) {
     .map((field) => {
       const value = values[field.name] ?? "";
       const commonAttrs = `id="modal_${field.name}" name="${field.name}" title="${field.label}" ${field.required ? "required" : ""}`;
+
+      if (field.type === "file") {
+        return `
+          <div class="field ${field.spanAll ? "grid-span-all" : ""}">
+            <label for="modal_${field.name}">${field.label}</label>
+            <input ${commonAttrs} type="file" ${field.accept ? `accept="${field.accept}"` : ""} />
+            ${field.uploadButtonLabel ? `<div class="action-row mt-10"><button id="modal_${field.name}UploadBtn" class="btn btn-light" type="button">${field.uploadButtonLabel}</button></div>` : ""}
+          </div>
+        `;
+      }
 
       if (field.type === "textarea") {
         return `
@@ -529,6 +584,7 @@ function bindEditActions() {
             ],
           },
           { name: "posterUrl", label: "Poster URL" },
+          { name: "posterFile", label: "Upload poster", type: "file", accept: "image/*", uploadButtonLabel: "Tải ảnh poster", spanAll: true },
           { name: "description", label: "Nội dung phim", type: "textarea", spanAll: true, rows: 5 },
         ],
         values: {
@@ -561,6 +617,32 @@ function bindEditActions() {
           });
         },
       });
+
+      const modalPosterFileInput = document.getElementById("modal_posterFile");
+      const modalPosterUploadBtn = document.getElementById("modal_posterFileUploadBtn");
+      const modalPosterUrlInput = document.getElementById("modal_posterUrl");
+
+      if (modalPosterFileInput && modalPosterUploadBtn && modalPosterUrlInput) {
+        modalPosterUploadBtn.addEventListener("click", async () => {
+          const file = modalPosterFileInput.files?.[0];
+          if (!file) {
+            adminEditError.textContent = "Vui lòng chọn ảnh poster trước khi tải lên";
+            return;
+          }
+
+          try {
+            modalPosterUploadBtn.disabled = true;
+            adminEditError.textContent = "Đang tải ảnh poster...";
+            const url = await uploadImageFile(file);
+            modalPosterUrlInput.value = url;
+            adminEditError.textContent = "Tải ảnh poster thành công";
+          } catch (error) {
+            adminEditError.textContent = error.message;
+          } finally {
+            modalPosterUploadBtn.disabled = false;
+          }
+        });
+      }
     });
   });
 
@@ -942,6 +1024,10 @@ if (showtimeFormat) {
     }
   });
 }
+
+bindImageUploadButton(moviePosterUploadBtn, moviePosterFileInput, moviePosterUrlInput, "poster phim");
+bindImageUploadButton(comboImageUploadBtn, comboImageFileInput, comboImageUrlInput, "combo");
+bindImageUploadButton(blogImageUploadBtn, blogImageFileInput, blogImageUrlInput, "blog");
 
 formatForm?.addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -63,6 +63,8 @@
               <div class="field"><label for="movieReleaseDate">Ngày khởi chiếu</label><input id="movieReleaseDate" type="date" name="releaseDate" title="Ngày khởi chiếu" /></div>
               <div class="field"><label for="movieStatus">Trạng thái</label><select id="movieStatus" name="status" title="Trạng thái chiếu"><option value="now_showing">Đang chiếu</option><option value="coming_soon">Sắp chiếu</option></select></div>
               <div class="field"><label for="moviePosterUrl">Poster URL</label><input id="moviePosterUrl" name="posterUrl" title="Đường dẫn poster" /></div>
+              <div class="field"><label for="moviePosterFile">Upload poster</label><input id="moviePosterFile" type="file" accept="image/*" title="Tải ảnh poster" /></div>
+              <div class="action-row align-end"><button id="moviePosterUploadBtn" class="btn btn-light" type="button">Tải ảnh poster</button></div>
               <div class="field grid-span-all"><label for="movieDescription">Nội dung phim</label><textarea id="movieDescription" name="description" rows="4" title="Nội dung phim"></textarea></div>
               <div class="action-row grid-span-all"><button class="btn" type="submit">Thêm phim</button></div>
             </form>
@@ -117,6 +119,8 @@
                 <div class="field"><label for="comboName">Tên combo</label><input id="comboName" name="name" title="Tên combo" required /></div>
                 <div class="field"><label for="comboDescription">Mô tả</label><input id="comboDescription" name="description" title="Mô tả combo" /></div>
                 <div class="field"><label for="comboImageUrl">URL hình ảnh</label><input id="comboImageUrl" name="imageUrl" title="URL hình ảnh combo" placeholder="https://..." /></div>
+                <div class="field"><label for="comboImageFile">Upload hình ảnh</label><input id="comboImageFile" type="file" accept="image/*" title="Tải ảnh combo" /></div>
+                <div class="action-row align-end"><button id="comboImageUploadBtn" class="btn btn-light" type="button">Tải ảnh combo</button></div>
                 <div class="field"><label for="comboPrice">Giá</label><input id="comboPrice" type="number" name="price" title="Giá combo" required /></div>
                 <button class="btn" type="submit">Thêm combo</button>
               </form>
@@ -135,6 +139,8 @@
                 <div class="field"><label for="blogTitle">Tiêu đề</label><input id="blogTitle" name="title" title="Tiêu đề blog" required /></div>
                 <div class="field"><label for="blogSummary">Tóm tắt</label><input id="blogSummary" name="summary" title="Tóm tắt blog" maxlength="320" /></div>
                 <div class="field"><label for="blogImageUrl">URL hình ảnh</label><input id="blogImageUrl" name="imageUrl" title="URL hình ảnh blog" placeholder="https://..." /></div>
+                <div class="field"><label for="blogImageFile">Upload hình ảnh</label><input id="blogImageFile" type="file" accept="image/*" title="Tải ảnh blog" /></div>
+                <div class="action-row align-end"><button id="blogImageUploadBtn" class="btn btn-light" type="button">Tải ảnh blog</button></div>
                 <div class="field">
                   <label for="blogStatus">Trạng thái</label>
                   <select id="blogStatus" name="status" title="Trạng thái blog">

@@ -1,8 +1,9 @@
 const API = {
   async request(path, options = {}) {
     const token = localStorage.getItem("token");
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
     const headers = {
-      "Content-Type": "application/json",
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     };
 
@@ -29,6 +30,10 @@ const API = {
 
   async post(path, data) {
     return this.request(path, { method: "POST", body: JSON.stringify(data) });
+  },
+
+  async postForm(path, formData) {
+    return this.request(path, { method: "POST", body: formData });
   },
 
   async put(path, data) {

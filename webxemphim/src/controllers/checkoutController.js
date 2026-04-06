@@ -16,6 +16,15 @@ async function checkout(req, res, context) {
 async function confirmPayment(req, res, context) {
 	if (!(await requireAuth(req, res, context))) return;
 	const orderId = Number(context.pathname.match(/^\/api\/payments\/(\d+)\/confirm$/)[1]);
+	const [[order]] = await context.pool.query("SELECT id, user_id AS userId FROM booking_orders WHERE id = ? LIMIT 1", [orderId]);
+	if (!order) {
+		sendJson(res, 404, { ok: false, message: "Không tìm thấy đơn hàng" });
+		return;
+	}
+	if (context.authUser.role !== "admin" && Number(order.userId) !== Number(context.authUser.id)) {
+		sendJson(res, 403, { ok: false, message: "Bạn không có quyền xác nhận thanh toán đơn này" });
+		return;
+	}
 	await context.pool.query("UPDATE booking_orders SET payment_status = 'paid', status = 'confirmed' WHERE id = ?", [orderId]);
 	sendJson(res, 200, { ok: true, message: "Xác nhận thanh toán thành công" });
 }

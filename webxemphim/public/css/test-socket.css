@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+    padding: 20px;
+}
+
+#logs {
+    background: #f4f4f4;
+    padding: 10px;
+    min-height: 200px;
+    font-family: monospace;
+}
+
+.log-item {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+#status {
+    color: red;
+}
