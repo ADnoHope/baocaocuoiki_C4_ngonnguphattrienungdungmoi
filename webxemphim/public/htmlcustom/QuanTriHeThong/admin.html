@@ -19,14 +19,50 @@
     <main class="panel-page admin-shell">
       <div class="admin-layout">
         <aside class="admin-sidebar panel-box" aria-label="Menu quản trị">
-          <p class="admin-menu-label">Menu</p>
-          <button class="admin-menu-item is-active" type="button" data-admin-view="overview">Tổng quan</button>
-          <button class="admin-menu-item" type="button" data-admin-view="movies">Quản lý phim</button>
-          <button class="admin-menu-item" type="button" data-admin-view="formats">Quản lý định dạng phim</button>
-          <button class="admin-menu-item" type="button" data-admin-view="showtimes">Quản lý rạp và suất chiếu</button>
-          <button class="admin-menu-item" type="button" data-admin-view="combos">Quản lý combo và đơn đặt</button>
-          <button class="admin-menu-item" type="button" data-admin-view="blogs">Quản lý blog</button>
-          <button class="admin-menu-item" type="button" data-admin-view="promotions">Quản lý khuyến mãi</button>
+          <div class="admin-workspace-head">
+            <p class="admin-menu-label">Workspace</p>
+            <p class="admin-workspace-title">Cinema Operations</p>
+            <p class="admin-workspace-current">Đang mở: <strong id="adminWorkspaceCurrent">Tổng quan</strong></p>
+          </div>
+
+          <div class="admin-workspace-strip">
+            <div class="admin-top-nav" role="tablist" aria-label="Menu chính">
+              <button class="admin-menu-item is-active" type="button" data-admin-view="overview">
+                <span class="admin-item-icon" aria-hidden="true">DB</span>
+                <span>Tổng quan</span>
+              </button>
+              <button class="admin-menu-item" type="button" data-admin-view="movies">
+                <span class="admin-item-icon" aria-hidden="true">MV</span>
+                <span>Quản lý phim</span>
+              </button>
+              <button class="admin-menu-item" type="button" data-admin-view="showtimes">
+                <span class="admin-item-icon" aria-hidden="true">ST</span>
+                <span>Rạp &amp; suất chiếu</span>
+              </button>
+              <button class="admin-menu-item" type="button" data-admin-view="combos">
+                <span class="admin-item-icon" aria-hidden="true">CB</span>
+                <span>Combo &amp; đơn đặt</span>
+              </button>
+            </div>
+
+            <div class="admin-sub-nav" role="tablist" aria-label="Menu phụ">
+              <button class="admin-menu-item admin-submenu-item" type="button" data-admin-view="formats">
+                <span class="admin-item-icon" aria-hidden="true">FM</span>
+                <span>Định dạng phim</span>
+                <span class="admin-badge" data-admin-badge="formats">0</span>
+              </button>
+              <button class="admin-menu-item admin-submenu-item" type="button" data-admin-view="blogs">
+                <span class="admin-item-icon" aria-hidden="true">BL</span>
+                <span>Quản lý blog</span>
+                <span class="admin-badge" data-admin-badge="blogs">0</span>
+              </button>
+              <button class="admin-menu-item admin-submenu-item" type="button" data-admin-view="promotions">
+                <span class="admin-item-icon" aria-hidden="true">PR</span>
+                <span>Khuyến mãi</span>
+                <span class="admin-badge" data-admin-badge="promotions">0</span>
+              </button>
+            </div>
+          </div>
         </aside>
 
         <section class="admin-content">
@@ -41,7 +77,21 @@
 
           <section class="panel-box mt-12 admin-view is-active" data-admin-panel="overview">
             <h2 class="panel-title title-22">Tổng quan</h2>
-            <div id="overview" class="grid-3"></div>
+            <div class="command-center">
+              <div id="overview" class="grid-3 command-kpis"></div>
+
+              <div class="command-main mt-12">
+                <section class="panel-box admin-subpanel command-panel">
+                  <h3 class="panel-title title-18">Cảnh báo vận hành</h3>
+                  <ul id="commandAlerts" class="command-list"></ul>
+                </section>
+
+                <section class="panel-box admin-subpanel command-panel">
+                  <h3 class="panel-title title-18">Hoạt động gần đây</h3>
+                  <ul id="commandTimeline" class="command-list"></ul>
+                </section>
+              </div>
+            </div>
           </section>
 
           <section class="panel-box mt-12 admin-view" data-admin-panel="movies">

@@ -1,5 +1,7 @@
 const adminIdentity = document.getElementById("adminIdentity");
 const overview = document.getElementById("overview");
+const commandAlerts = document.getElementById("commandAlerts");
+const commandTimeline = document.getElementById("commandTimeline");
 const adminNotice = document.getElementById("adminNotice");
 const movieList = document.getElementById("movieList");
 const theaterList = document.getElementById("theaterList");
@@ -34,6 +36,8 @@ const movieFormatCombo = document.getElementById("movieFormatCombo");
 const movieFormatMenu = document.getElementById("movieFormatMenu");
 const adminMenuItems = document.querySelectorAll("[data-admin-view]");
 const adminPanels = document.querySelectorAll("[data-admin-panel]");
+const adminBadgeItems = document.querySelectorAll("[data-admin-badge]");
+const adminWorkspaceCurrent = document.getElementById("adminWorkspaceCurrent");
 const adminEditModal = document.getElementById("adminEditModal");
 const adminEditTitle = document.getElementById("adminEditTitle");
 const adminEditForm = document.getElementById("adminEditForm");
@@ -52,6 +56,38 @@ let formats = [];
 let blogs = [];
 let promotions = [];
 let activeModalSubmit = null;
+
+function animatePanelEntry(panel) {
+  if (!panel) {
+    return;
+  }
+
+  panel.classList.remove("is-entering");
+  void panel.offsetWidth;
+  panel.classList.add("is-entering");
+  window.setTimeout(() => {
+    panel.classList.remove("is-entering");
+  }, 300);
+}
+
+function updateAdminBadges() {
+  if (!adminBadgeItems.length) {
+    return;
+  }
+
+  const badgeMap = {
+    formats: formats.length,
+    blogs: blogs.length,
+    promotions: promotions.length,
+  };
+
+  adminBadgeItems.forEach((badge) => {
+    const key = badge.dataset.adminBadge;
+    const value = Number.isFinite(Number(badgeMap[key])) ? Number(badgeMap[key]) : 0;
+    badge.textContent = String(value);
+    badge.title = `${value} mục`;
+  });
+}
 
 async function uploadImageFile(file) {
   const formData = new FormData();
@@ -375,7 +411,151 @@ async function loadOverview() {
     <div class="summary-box"><strong>Rạp</strong><div>${payload.data.theaters}</div></div>
     <div class="summary-box"><strong>Suất chiếu</strong><div>${payload.data.showtimes}</div></div>
     <div class="summary-box"><strong>Đơn đặt</strong><div>${payload.data.orders}</div></div>
+    <div class="summary-box"><strong>Doanh thu hôm nay</strong><div data-kpi="revenue">0 đ</div></div>
   `;
+}
+
+function parseAdminDate(value) {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = new Date(String(value).replace(" ", "T"));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function formatAdminDateTime(value) {
+  const parsed = parseAdminDate(value);
+  if (!parsed) {
+    return "Không rõ thời gian";
+  }
+
+  return parsed.toLocaleString("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    day: "2-digit",
+    month: "2-digit",
+  });
+}
+
+function formatAdminMoney(value) {
+  const amount = Number(value || 0);
+  return `${new Intl.NumberFormat("vi-VN").format(amount)} đ`;
+}
+
+function renderCommandCenterPanels() {
+  if (!commandAlerts || !commandTimeline) {
+    return;
+  }
+
+  const now = new Date();
+  const pendingOrders = orders.filter((order) => String(order.status || "").toLowerCase() === "pending").length;
+  const todayRevenue = orders
+    .filter((order) => {
+      const createdAt = parseAdminDate(order.createdAt || order.updatedAt || order.startTime);
+      return createdAt && createdAt.toDateString() === now.toDateString();
+    })
+    .reduce((sum, order) => sum + Number(order.totalAmount || 0), 0);
+
+  const soonShowtimes = showtimes
+    .map((showtime) => ({ showtime, startsAt: parseAdminDate(showtime.startTime) }))
+    .filter((item) => item.startsAt && item.startsAt >= now)
+    .sort((a, b) => a.startsAt - b.startsAt)
+    .slice(0, 3);
+
+  const expiringPromotions = promotions
+    .map((promo) => ({ promo, expiresAt: parseAdminDate(promo.validUntil) }))
+    .filter((item) => item.expiresAt)
+    .filter((item) => item.expiresAt - now <= 3 * 24 * 60 * 60 * 1000)
+    .sort((a, b) => a.expiresAt - b.expiresAt)
+    .slice(0, 2);
+
+  const alerts = [];
+  if (pendingOrders > 0) {
+    alerts.push({
+      level: "warn",
+      label: "Đơn chờ xử lý",
+      text: `${pendingOrders} đơn đang ở trạng thái chờ xác nhận`,
+    });
+  }
+
+  soonShowtimes.forEach((item) => {
+    alerts.push({
+      level: "info",
+      label: "Suất chiếu sắp bắt đầu",
+      text: `${item.showtime.movieTitle} - ${item.showtime.theaterName} lúc ${formatAdminDateTime(item.showtime.startTime)}`,
+    });
+  });
+
+  expiringPromotions.forEach((item) => {
+    alerts.push({
+      level: "danger",
+      label: "Voucher sắp hết hạn",
+      text: `${item.promo.code} hết hạn lúc ${formatAdminDateTime(item.promo.validUntil)}`,
+    });
+  });
+
+  if (!alerts.length) {
+    alerts.push({
+      level: "ok",
+      label: "Hệ thống ổn định",
+      text: "Hiện chưa có cảnh báo cần xử lý ngay",
+    });
+  }
+
+  commandAlerts.innerHTML = alerts
+    .map(
+      (alert) => `
+        <li class="command-item command-item-${alert.level}">
+          <p class="command-item-label">${alert.label}</p>
+          <p class="command-item-text">${alert.text}</p>
+        </li>
+      `
+    )
+    .join("");
+
+  const timelineEvents = [
+    ...orders
+      .slice()
+      .sort((a, b) => Number(b.id) - Number(a.id))
+      .slice(0, 5)
+      .map((order) => ({
+        time: parseAdminDate(order.createdAt || order.updatedAt || order.startTime),
+        title: `Đơn #${order.id} - ${order.customerName || "Khách"}`,
+        detail: `${order.movieTitle || "N/A"} - ${formatAdminMoney(order.totalAmount)}`,
+      })),
+    ...showtimes
+      .map((showtime) => ({
+        time: parseAdminDate(showtime.startTime),
+        title: `Suất #${showtime.id} - ${showtime.movieTitle || "N/A"}`,
+        detail: `${showtime.theaterName || "N/A"}`,
+      }))
+      .filter((item) => item.time && item.time >= now)
+      .sort((a, b) => a.time - b.time)
+      .slice(0, 3),
+  ]
+    .filter((item) => item.time)
+    .sort((a, b) => b.time - a.time)
+    .slice(0, 6);
+
+  commandTimeline.innerHTML = timelineEvents.length
+    ? timelineEvents
+        .map(
+          (event) => `
+            <li class="command-item command-item-timeline">
+              <p class="command-item-label">${event.title}</p>
+              <p class="command-item-text">${event.detail}</p>
+              <p class="command-item-time">${formatAdminDateTime(event.time)}</p>
+            </li>
+          `
+        )
+        .join("")
+    : `<li class="command-item command-item-ok"><p class="command-item-label">Chưa có hoạt động</p><p class="command-item-text">Dữ liệu sự kiện sẽ hiển thị tại đây.</p></li>`;
+
+  const revenueKpi = overview?.querySelector("[data-kpi='revenue']");
+  if (revenueKpi) {
+    revenueKpi.textContent = formatAdminMoney(todayRevenue);
+  }
 }
 
 async function loadData() {
@@ -521,6 +701,9 @@ async function loadData() {
       ])
     );
   }
+
+  updateAdminBadges();
+  renderCommandCenterPanels();
 
   bindDeleteActions();
   bindEditActions();
@@ -932,13 +1115,34 @@ function bindEditActions() {
 }
 
 function switchAdminView(viewKey) {
+  const viewNameMap = {
+    overview: "Tổng quan",
+    movies: "Quản lý phim",
+    formats: "Định dạng phim",
+    showtimes: "Rạp và suất chiếu",
+    combos: "Combo và đơn đặt",
+    blogs: "Quản lý blog",
+    promotions: "Khuyến mãi",
+  };
+
   adminMenuItems.forEach((item) => {
     item.classList.toggle("is-active", item.dataset.adminView === viewKey);
   });
 
+  let activePanel = null;
   adminPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.dataset.adminPanel === viewKey);
+    const isActive = panel.dataset.adminPanel === viewKey;
+    panel.classList.toggle("is-active", isActive);
+    if (isActive) {
+      activePanel = panel;
+    }
   });
+
+  animatePanelEntry(activePanel);
+
+  if (adminWorkspaceCurrent) {
+    adminWorkspaceCurrent.textContent = viewNameMap[viewKey] || "Tổng quan";
+  }
 }
 
 function bindAdminMenu() {
