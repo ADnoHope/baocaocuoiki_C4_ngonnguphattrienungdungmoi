@@ -45,6 +45,14 @@ function selectedShowtimeId() {
   return Number(showtimeSelect.value || 0);
 }
 
+function formatRatedScore(value) {
+  const score = Number(String(value ?? "").trim());
+  if (Number.isInteger(score) && score >= 1 && score <= 10) {
+    return `${score}/10`;
+  }
+  return value ? String(value) : "Đang cập nhật";
+}
+
 function renderMovieDetail() {
   const movie = movies.find((item) => item.id === selectedMovieId());
   if (!movie) {
@@ -57,7 +65,7 @@ function renderMovieDetail() {
     <div>Đạo diễn: ${movie.director || "Đang cập nhật"}</div>
     <div>Diễn viên: ${movie.castInfo || "Đang cập nhật"}</div>
     <div>Ngôn ngữ: ${movie.language || "Đang cập nhật"}</div>
-    <div>Rated: ${movie.rated || "Đang cập nhật"}</div>
+    <div>Đánh giá: ${formatRatedScore(movie.rated)}</div>
     <div>Thể loại: ${movie.genre || "Đang cập nhật"}</div>
     <div>Thời lượng: ${movie.durationMinutes || "?"} phút</div>
     <div>Mô tả: ${movie.description || "Chưa có mô tả"}</div>

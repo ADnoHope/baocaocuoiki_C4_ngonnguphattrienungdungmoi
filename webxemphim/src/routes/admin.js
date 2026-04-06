@@ -1,5 +1,11 @@
 const { sendJson, sendBadRequest, readJsonBody, parseIdFromPath, toJsonArray, setMovieFormatMappings, getFormatNameById, getSeatLayoutPreset } = require("../utils");
 
+function normalizeRatedScore(value) {
+	const score = Number(String(value ?? "").trim());
+	if (!Number.isInteger(score) || score < 1 || score > 10) return null;
+	return String(score);
+}
+
 async function handle(req, res, pathname, { pool, authUser, runMulter, upload }) {
 	if (!pathname.startsWith("/api/admin/")) return false;
 	if (!authUser || authUser.role !== "admin") { sendJson(res, 403, { ok: false, message: "Cần quyền admin" }); return true; }
@@ -76,9 +82,10 @@ async function handle(req, res, pathname, { pool, authUser, runMulter, upload })
 	if (pathname === "/api/admin/movies" && req.method === "POST") {
 		const body = await readJsonBody(req);
 		if (!body.title) { sendBadRequest(res, "Cần cung cấp tiêu đề phim"); return true; }
+		const rated = normalizeRatedScore(body.rated);
 		const [res3] = await pool.query(
 			"INSERT INTO movies (title, description, genre, director, cast_info, language, rated, duration_minutes, release_date, status, poster_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			[body.title, body.description || null, body.genre || null, body.director || null, body.castInfo || null, body.language || null, body.rated || null, body.durationMinutes || null, body.releaseDate || null, body.status || "coming_soon", body.posterUrl || null]
+			[body.title, body.description || null, body.genre || null, body.director || null, body.castInfo || null, body.language || null, rated, body.durationMinutes || null, body.releaseDate || null, body.status || "coming_soon", body.posterUrl || null]
 		);
 		await setMovieFormatMappings(pool, res3.insertId, body.formatIds);
 		sendJson(res, 201, { ok: true, message: "Tạo phim thành công", id: res3.insertId });
@@ -88,9 +95,10 @@ async function handle(req, res, pathname, { pool, authUser, runMulter, upload })
 	const mid = parseIdFromPath(pathname, "/api/admin/movies");
 	if (mid && req.method === "PUT") {
 		const body = await readJsonBody(req);
+		const rated = normalizeRatedScore(body.rated);
 		await pool.query(
 			"UPDATE movies SET title = ?, description = ?, genre = ?, director = ?, cast_info = ?, language = ?, rated = ?, duration_minutes = ?, release_date = ?, status = ?, poster_url = ? WHERE id = ?",
-			[body.title, body.description || null, body.genre || null, body.director || null, body.castInfo || null, body.language || null, body.rated || null, body.durationMinutes || null, body.releaseDate || null, body.status || "coming_soon", body.posterUrl || null, mid]
+			[body.title, body.description || null, body.genre || null, body.director || null, body.castInfo || null, body.language || null, rated, body.durationMinutes || null, body.releaseDate || null, body.status || "coming_soon", body.posterUrl || null, mid]
 		);
 		await setMovieFormatMappings(pool, mid, body.formatIds);
 		sendJson(res, 200, { ok: true, message: "Cập nhật phim thành công" });

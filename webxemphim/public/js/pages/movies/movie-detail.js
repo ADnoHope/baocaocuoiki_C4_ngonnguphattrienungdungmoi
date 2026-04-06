@@ -25,6 +25,14 @@ function formatNamesText(movie) {
   return "Đang cập nhật";
 }
 
+function formatRatedScore(value) {
+  const score = Number(String(value ?? "").trim());
+  if (Number.isInteger(score) && score >= 1 && score <= 10) {
+    return `${score}/10`;
+  }
+  return value ? String(value) : "Đang cập nhật";
+}
+
 async function loadMovieDetail() {
   const movieId = getMovieIdFromQuery();
   if (!movieId) {
@@ -51,7 +59,7 @@ async function loadMovieDetail() {
       <p><strong>Thời lượng phim:</strong> ${movie.durationMinutes ? `${movie.durationMinutes} phút` : "Đang cập nhật"}</p>
       <p><strong>Khởi chiếu:</strong> ${movie.releaseDate ? formatDateTime(movie.releaseDate).split(",")[0] : "Đang cập nhật"}</p>
       <p><strong>Ngôn ngữ:</strong> ${safeText(movie.language)}</p>
-      <p><strong>Rated:</strong> ${safeText(movie.rated)}</p>
+      <p><strong>Đánh giá:</strong> ${formatRatedScore(movie.rated)}</p>
     `;
 
     if (movie.posterUrl) {

@@ -116,6 +116,19 @@ function defaultSeatsByFormatId(formatId) {
   return defaultSeatsByFormatName(format?.name || "2D");
 }
 
+function normalizeRatedScore(value) {
+  const score = Number(String(value ?? "").trim());
+  if (!Number.isInteger(score) || score < 1 || score > 10) {
+    return null;
+  }
+  return String(score);
+}
+
+function formatRatedScore(value) {
+  const score = normalizeRatedScore(value);
+  return score ? `${score}/10` : (value || "");
+}
+
 function renderFormatSelectOptions(selectEl, movieId, selectedFormatId = 0) {
   if (!selectEl) {
     return;
@@ -301,6 +314,20 @@ function buildModalFields(fields, values) {
         `;
       }
 
+      if (field.type === "number") {
+        const minAttr = field.min != null ? `min="${field.min}"` : "";
+        const maxAttr = field.max != null ? `max="${field.max}"` : "";
+        const stepAttr = field.step != null ? `step="${field.step}"` : "";
+        const placeholderAttr = field.placeholder ? `placeholder="${field.placeholder}"` : "";
+
+        return `
+          <div class="field ${field.spanAll ? "grid-span-all" : ""}">
+            <label for="modal_${field.name}">${field.label}</label>
+            <input ${commonAttrs} type="number" ${minAttr} ${maxAttr} ${stepAttr} ${placeholderAttr} value="${String(value).replace(/"/g, "&quot;")}" />
+          </div>
+        `;
+      }
+
       return `
         <div class="field ${field.spanAll ? "grid-span-all" : ""}">
           <label for="modal_${field.name}">${field.label}</label>
@@ -389,7 +416,7 @@ async function loadData() {
   bindComboboxes(document);
 
   movieList.innerHTML = renderTable(
-    ["ID", "Tiêu đề", "Định dạng", "Đạo diễn", "Diễn viên", "Ngôn ngữ", "Thể loại", "Rated", "Trạng thái", "Thao tác"],
+    ["ID", "Tiêu đề", "Định dạng", "Đạo diễn", "Diễn viên", "Ngôn ngữ", "Thể loại", "Điểm", "Trạng thái", "Thao tác"],
     movies.map((movie) => [
       movie.id,
       movie.title,
@@ -398,7 +425,7 @@ async function loadData() {
       movie.castInfo || "",
       movie.language || "",
       movie.genre || "",
-      movie.rated || "",
+      formatRatedScore(movie.rated) || "",
       movie.status,
       `<div class=\"action-row\"><button class=\"btn btn-light\" data-edit-movie=\"${movie.id}\" type=\"button\">Sửa</button><button class=\"btn btn-danger\" data-delete-movie=\"${movie.id}\" type=\"button\">Xóa</button></div>`,
     ])
@@ -567,7 +594,7 @@ function bindEditActions() {
           { name: "director", label: "Đạo diễn" },
           { name: "castInfo", label: "Diễn viên" },
           { name: "language", label: "Ngôn ngữ" },
-          { name: "rated", label: "Rated" },
+          { name: "rated", label: "Điểm đánh giá (1-10/10)", type: "number", min: 1, max: 10, step: 1, placeholder: "1-10" },
           {
             name: "formatIds",
             label: "Định dạng",
@@ -596,7 +623,7 @@ function bindEditActions() {
           director: movie.director || "",
           castInfo: movie.castInfo || "",
           language: movie.language || "",
-          rated: movie.rated || "",
+          rated: normalizeRatedScore(movie.rated) || "",
           formatIds: Array.isArray(movie.formatIds) && movie.formatIds.length ? movie.formatIds.map((item) => String(item)) : [String(formats[0]?.id || "")],
           durationMinutes: movie.durationMinutes || "",
           releaseDate: movie.releaseDate ? String(movie.releaseDate).slice(0, 10) : "",
@@ -612,7 +639,7 @@ function bindEditActions() {
             director: payload.director || null,
             castInfo: payload.castInfo || null,
             language: payload.language || null,
-            rated: payload.rated || null,
+            rated: normalizeRatedScore(payload.rated),
             formatIds: toNumberArray(payload.formatIds),
             releaseDate: payload.releaseDate || null,
             posterUrl: payload.posterUrl || null,
@@ -970,13 +997,14 @@ movieForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(movieForm).entries());
   const selectedFormatIds = getComboboxCheckedValues(movieFormatMenu, "formatIds");
+  const ratedScore = normalizeRatedScore(data.rated);
 
   await API.post("/api/admin/movies", {
     ...data,
     director: data.director || null,
     castInfo: data.castInfo || null,
     language: data.language || null,
-    rated: data.rated || null,
+    rated: ratedScore,
     formatIds: selectedFormatIds,
     durationMinutes: data.durationMinutes ? Number(data.durationMinutes) : null,
   });
